@@ -1,0 +1,15 @@
+Package: dismotools
+Title: Tools for the raster and dismo packages.
+Description: Extra functionality for working with raster and dismo packages
+    including model reading, model parameter extraction, sampling and extraction
+    from multilayer raster objects.
+Version: 0.1
+Maintainer: Ben Tupper <btupper@bigelow.org>
+Author: Nick Record <nrecord@bigelow.org> and Ben Tupper <btupper@bigelow.org>
+License: MIT + file
+Depends:
+    R (>= 3.0)
+Imports:
+    methods,
+    raster
+RoxygenNote: 5.0.1
