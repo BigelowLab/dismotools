@@ -1,5 +1,5 @@
 Package: dismotools
-Title: Tools for the raster and dismo packages.
+Title: Extra tools for the raster and dismo packages.
 Description: Extra functionality for working with raster and dismo packages
     including model reading, model parameter extraction, sampling and extraction
     from multilayer raster objects.
