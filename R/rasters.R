@@ -13,7 +13,7 @@
 #'      \item{'x' and 'y' assumed to be the same as 'lon' and 'lat'}
 #'  }
 #' @return vector or cell numbers
-cellFromPts <- function(pts){
+cellFromPts <- function(R, pts){
 
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
     if (!is.data.frame(pts) && !is.matrix(pts)) 
@@ -29,7 +29,7 @@ cellFromPts <- function(pts){
     # row/col is the next easiest
     if (!is.null(cell)){   
         if (all(c('row', 'col') %in% nm)){
-            cell <- cellFromRowCol(R, pts[,'row'], pts[,'col'])
+            cell <- raster::cellFromRowCol(R, pts[,'row'], pts[,'col'])
         }
     }
     
@@ -38,7 +38,7 @@ cellFromPts <- function(pts){
         ix <- which(nm %in% c("x", "lon"))[1]
         if (length(ix)> 0){
             iy <- which(nm %in% c("y", "lat"))[1]
-            if (length(iy) > 0) cell <- cellFromXY(R, pts[,c(ix,iy)])
+            if (length(iy) > 0) cell <- raster::cellFromXY(R, pts[,c(ix,iy)])
         }
     }    
     
@@ -63,10 +63,10 @@ cellFromPts <- function(pts){
 layers_extractPoints <- function(R, pts){
     
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
-    nc <- as.integer(ncell(R))
-    nl <- as.integer(nlayers(R))
-    ny <- nrow(R)
-    nx <- ncol(R)
+    nc <- as.integer(raster::ncell(R))
+    nl <- as.integer(raster::nlayers(R))
+    ny <- raster::nrow(R)
+    nx <- raster::ncol(R)
 
     if (!(is.data.frame(pts) || is.matrix(pts))) 
         stop("pts must be data.frame or matrix")
@@ -93,7 +93,7 @@ layers_extractPoints <- function(R, pts){
     
     index <- cell + (layer-1) * nc
     
-    as.vector(R)[index]
+    raster::as.vector(R)[index]
 }
 
 #' Select N non-NA random points from a mulitlayer Raster* object
@@ -132,20 +132,16 @@ layers_randomPoints <- function(R, pts = NULL, N = 1000){
             stop("pts must have 'col', 'lon' or 'x' column")
         if (!any(c("lat", "y", "row") %in% names(pts)))
             stop("pts must have 'row', 'lat' or 'y' column")    
-        # ix <- which(names(pts) %in% c("lon", "x"))[1]
-        # if (length(ix) == 0) stop("pts must have 'lon' or 'x' column")
-        # iy <- which(names(pts) %in% c("lat", "y"))[1]
-        # if (length(iy) == 0) stop("pts must have 'lat' or 'y' column")
         iz <- which(names(pts) %in% c("layer", "z"))[1]   
-        if (length(iy) == 0) stop("pts must have 'layer' or 'z' column")
+        if (length(iz) == 0) stop("pts must have 'layer' or 'z' column")
     }
     # get all of the data as a vector - storage is 1,2,3 across rows
     # starting form upper left
-    v <- as.vector(R)
-    nc <- as.integer(ncell(R))
-    nl <- as.integer(nlayers(R))
-    ny <- nrow(R)
-    nx <- ncol(R)
+    v <- raster::as.vector(R)
+    nc <- as.integer(raster::ncell(R))
+    nl <- as.integer(raster::nlayers(R))
+    ny <- raster::nrow(R)
+    nx <- raster::ncol(R)
    
     
     # if pts are present, then we flag those in vector 'v'
@@ -174,12 +170,12 @@ layers_randomPoints <- function(R, pts = NULL, N = 1000){
     # convert to cells, layers, rows, columns, and xy
     cell <- ((s-1L) %% nc) + 1L
     layer <- ((s-1L) %/% nc) + 1L
-    rc <- rowColFromCell(R, cell)
-    xy <- xyFromCell(R, cell)
+    rc <- raster::rowColFromCell(R, cell)
+    xy <- raster::xyFromCell(R, cell)
 
     x <- data.frame(
-        lon = xFromCol(R, rc[,'col']), 
-        lat = yFromRow(R, rc[,'row']),
+        lon = raster::xFromCol(R, rc[,'col']), 
+        lat = raster::yFromRow(R, rc[,'row']),
         row = rc[,'row'],
         col = rc[,'col'],
         cell = cell, 

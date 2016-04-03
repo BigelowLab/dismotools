@@ -19,7 +19,7 @@ auc_raster <- function(R, xy, ...){
     } else {
         v <- raster::extract(R, xy)
     }
-    auc_vector(as.vector(R), v, ...)
+    auc_vector(raster::as.vector(R), v, ...)
 }
 
 #' Compute AUC values ala presence-only data

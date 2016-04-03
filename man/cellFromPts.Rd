@@ -4,9 +4,11 @@
 \alias{cellFromPts}
 \title{Converts point location to cell number.}
 \usage{
-cellFromPts(pts)
+cellFromPts(R, pts)
 }
 \arguments{
+\item{R}{a multilayer Raster* object}
+
 \item{pts}{location info for points must have at least one of the following
 combinations of columns
 \itemize{
@@ -15,8 +17,6 @@ combinations of columns
     \item{'lon' and 'lat'}
     \item{'x' and 'y' assumed to be the same as 'lon' and 'lat'}
 }}
-
-\item{R}{a multilayer Raster* object}
 }
 \value{
 vector or cell numbers
