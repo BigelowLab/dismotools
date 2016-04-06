@@ -51,8 +51,8 @@ read_maxent <- function(path){
    X <- new('MaxEnt')
    if (!is.null(lambdas)) slot(X, 'lambdas') <- lambdas
    if (!is.null(results)) slot(X, 'results') <- results
-   slot(X, 'path') <- P
-   slot(X, 'html') <- file.path(P, 'maxent.html')
+   slot(X, 'path') <- path
+   slot(X, 'html') <- file.path(path, 'maxent.html')
    if (!is.null(presence)) slot(X, 'presence') <- presence
    if (!is.null(absence)) slot(X, 'absence') <- absence
    slot(X, 'hasabsence') <- !is.null(absence)
