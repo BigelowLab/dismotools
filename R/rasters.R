@@ -34,7 +34,7 @@ cellFromPts <- function(R, pts){
     }
     
     # real coordinates provided
-    if (!is.null(cell)){
+    if (is.null(cell)){
         ix <- which(nm %in% c("x", "lon"))[1]
         if (length(ix)> 0){
             iy <- which(nm %in% c("y", "lat"))[1]
@@ -75,19 +75,6 @@ layers_extractPoints <- function(R, pts){
     if (length(iz) == 0) stop("pts must have 'layer' or 'z' column")
     layer <- pts[,iz]
     if (is.character(layer)) layer <- match(layer, names(R))
-    
-    #ic <- which(names(pts) == 'cell')[1]
-    #if (length(ic) == 0){
-    #    icol <- which(names(pts) == 'col')[1]
-    #    if (length(icol) == 0)
-    #        stop("pts must have 'cell' or 'row' and 'col' columns")
-    #    irow <- which(names(pts) == 'col')[1]
-    #    if (length(irow) == 0)
-    #        stop("pts must have 'cell' or 'row' and 'col' columns")
-    #    cell <- irow + (icol-1) * nx           
-    #} else {
-    #    cell <- pts[,'cell']
-    #}
     
     cell <- cellFromPts(R, pts)
     
