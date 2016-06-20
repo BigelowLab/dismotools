@@ -87,6 +87,11 @@ maxent_get_varnames <- function(object){
 #' @param object a MaxEnt model
 #' @param name the result name
 #' @return numeric, matrix or vector depending upon what is requested
+#' @examples
+#' \dontrun{
+#'  auc <- maxent_get_results(object, 'AUC')
+#'  contrib <- maxent_get_results(object, 'contribution')
+#' }
 maxent_get_results <- function(object, name){
    stopifnot(inherits(object, 'MaxEnt'))
    nm <- tolower(name[1])

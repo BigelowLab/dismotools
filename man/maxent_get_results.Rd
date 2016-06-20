@@ -17,4 +17,10 @@ numeric, matrix or vector depending upon what is requested
 \description{
 Retrieve the results of a MaxEnt model by name
 }
+\examples{
+\dontrun{
+ auc <- maxent_get_results(object, 'AUC')
+ contrib <- maxent_get_results(object, 'contribution')
+}
+}
 
