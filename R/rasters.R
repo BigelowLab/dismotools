@@ -18,7 +18,7 @@ cellFromPts <- function(R, pts){
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
     if (!is.data.frame(pts) && !is.matrix(pts)) 
         stop("Input pts must be data.frame or matrix")
-    if (inherits(pts, 'tibble')) pts <- as.data.frame(pts)
+    if (inherits(pts, 'tibble')) pts <- as.data.frame(pts, stringsAsFactors = FALSE)
     # setup
     nm <- colnames(pts)
     cell <- NULL 
@@ -38,7 +38,7 @@ cellFromPts <- function(R, pts){
         ix <- which(nm %in% c("x", "lon"))[1]
         if (length(ix)> 0){
             iy <- which(nm %in% c("y", "lat"))[1]
-            if (length(iy) > 0) cell <- raster::cellFromXY(R, pts[[c(ix,iy)]])
+            if (length(iy) > 0) cell <- raster::cellFromXY(R, pts[,c(ix,iy)])
         }
     }    
     
@@ -70,7 +70,7 @@ layers_extractPoints <- function(R, pts){
 
     if (!(is.data.frame(pts) || is.matrix(pts))) 
         stop("pts must be data.frame or matrix")
-    if (inherits(pts, 'tibble')) pts <- as.data.frame(pts)
+    if (inherits(pts, 'tibble')) pts <- as.data.frame(pts, stringsAsFactors = FALSE)
     
     iz <- which(names(pts) %in% c("layer", "z"))[1]
     if (length(iz) == 0) stop("pts must have 'layer' or 'z' column")
@@ -115,7 +115,7 @@ layers_randomPoints <- function(R, pts = NULL, N = 1000){
     if (!is.null(pts)){
         if (!(is.data.frame(pts) || is.matrix(pts))) 
             stop("pts must be data.frame or matrix")
-        if (inherits(pts, 'tibble')) pts <- as.data.frame(pts)
+        if (inherits(pts, 'tibble')) pts <- as.data.frame(pts, stringsAsFactors = FALSE)
         if (ncol(pts) < 3) stop("pts must have at least three columns")
         if (!any(c("lon", "x", "col") %in% names(pts)))
             stop("pts must have 'col', 'lon' or 'x' column")
