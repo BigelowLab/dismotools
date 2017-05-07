@@ -17,9 +17,9 @@ if r has multiple layers then xy should also have column 'layer'}
 \value{
 a list of 
 \itemize{
- \item{a vector of fpa (fractional predicted area)}
- \item{a vector of sensitivity (1-omission rate)}
- \item{area AUC}
+ \item{fpa, a vector of fractional predicted area}
+ \item{sensitive,a vector of sensitivity (1-omission rate)}
+ \item{area, scalar AUC value}
  }
 }
 \description{

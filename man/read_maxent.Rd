@@ -7,10 +7,12 @@
 read_maxent(path)
 }
 \arguments{
-\item{path}{fully qualified path to where the MexEnt model is saved}
+\item{path}{fully qualified path to where the MexEnt model is saved
+If multiple paths are provided then a list of models is returned.  
+You just have to keep track of this yourself so you aren't surprised.}
 }
 \value{
-a MaxEnt model object or NULL
+a MaxEnt model object, a list of Maxent models or NULL
 }
 \description{
 Read a dismo::MaxEnt model saved in a directory.

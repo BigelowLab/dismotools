@@ -10,7 +10,7 @@ maxent_get_varnames(object)
 \item{object}{a MaxEnt model}
 }
 \value{
-characater vector of variable names
+characater vector of variable names or NULL
 }
 \description{
 Retrieve the names of the input variables of a maxent model

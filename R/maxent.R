@@ -1,11 +1,42 @@
+
+#' Given a list of maxent models prepare a data frame of results
+#' 
+#' @export
+#' @param x a list of one or more maxent models
+#' @param include character vector fo one or more components to include in the result
+#'  - ignored for now
+#' @param data.frame or NULL  Results for 'empty' models are excluded
+maxent_assemble_results <- function(x,
+    include = c("auc", "contribution")){
+    
+    nm <- sapply(x, function(x) basename(x@path))
+    auc <- sapply(x, maxent_get_results, 'auc')
+    null <- sapply(auc, is.null)
+    contrib <- lapply(x, maxent_get_results, "contribution")
+    contrib <- as.data.frame(do.call(rbind, contrib[!null]), stringsAsFactors = FALSE)
+    colnames(contrib) <- gsub(".contribution", "", colnames(contrib), fixed = TRUE)
+    data.frame(
+        name = nm[!null], 
+        auc = unlist(auc[!null]),
+        contrib,
+        stringsAsFactors = FALSE)
+}   
+
+
 #' Read a dismo::MaxEnt model saved in a directory. 
 #' 
 #' @export
 #' @param path fully qualified path to where the MexEnt model is saved
-#' @return a MaxEnt model object or NULL
+#'  If multiple paths are provided then a list of models is returned.  
+#'  You just have to keep track of this yourself so you aren't surprised. 
+#' @return a MaxEnt model object, a list of Maxent models or NULL
 read_maxent <- function(path){
-   # remove this if we move this fucntion to a package the depends upon dismo
    stopifnot(require(dismo))
+   if (length(path) > 1) {
+        x <- lapply(path, read_maxent)
+        names(x) <- basename(path)
+        return(x)
+    }
    
    # read the lambdas file 'species.lambdas' - no processing required
    # @return a character vector
@@ -75,9 +106,10 @@ maxent_read_results <- function(filename){
 #'
 #' @export
 #' @param object a MaxEnt model
-#' @return characater vector of variable names 
+#' @return characater vector of variable names or NULL
 maxent_get_varnames <- function(object){
    stopifnot(inherits(object, 'MaxEnt'))
+   if (is.null(object@presence) || (nrow(object@presence)==0)) return(NULL)
    colnames(object@presence)
 }
 
@@ -86,7 +118,7 @@ maxent_get_varnames <- function(object){
 #' @export
 #' @param object a MaxEnt model
 #' @param name the result name
-#' @return numeric, matrix or vector depending upon what is requested
+#' @return numeric, matrix or vector depending upon what is requested or NULL
 #' @examples
 #' \dontrun{
 #'  auc <- maxent_get_results(object, 'AUC')
@@ -94,6 +126,7 @@ maxent_get_varnames <- function(object){
 #' }
 maxent_get_results <- function(object, name){
    stopifnot(inherits(object, 'MaxEnt'))
+   if (is.null(object@results) || is.null(colnames(object@results)) ) return(NULL)
    nm <- tolower(name[1])
    if (nm == 'contribution'){
       vn <- maxent_get_varnames(object)
@@ -101,7 +134,7 @@ maxent_get_results <- function(object, name){
    } else if (nm == 'importance'){
       vn <- maxent_get_varnames(object)
       x <- object@results[paste0(vn,".permutation.importance"),]
-   } else if(nm == 'auc'){
+   } else if(grepl("auc", tolower(name[1]), fixed = TRUE)){
       x <- object@results['Training.AUC',]
    } else{
       x <- object@results[name,]

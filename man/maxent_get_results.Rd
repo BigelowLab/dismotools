@@ -12,7 +12,7 @@ maxent_get_results(object, name)
 \item{name}{the result name}
 }
 \value{
-numeric, matrix or vector depending upon what is requested
+numeric, matrix or vector depending upon what is requested or NULL
 }
 \description{
 Retrieve the results of a MaxEnt model by name

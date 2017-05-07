@@ -8,9 +8,9 @@
 #' @param ... further arguments for \code{auc_vector}
 #' @return a list of 
 #' \itemize{
-#'  \item{a vector of fpa (fractional predicted area)}
-#'  \item{a vector of sensitivity (1-omission rate)}
-#'  \item{area AUC}
+#'  \item{fpa, a vector of fractional predicted area}
+#'  \item{sensitive,a vector of sensitivity (1-omission rate)}
+#'  \item{area, scalar AUC value}
 #'  }
 auc_raster <- function(R, xy, ...){
 
@@ -19,7 +19,7 @@ auc_raster <- function(R, xy, ...){
     } else {
         v <- raster::extract(R, xy)
     }
-    auc_vector(raster::as.vector(R), v, ...)
+    auc_vector(raster::values(R), v, ...)
 }
 
 #' Compute AUC values ala presence-only data
