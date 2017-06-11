@@ -11,5 +11,7 @@ Depends:
     R (>= 3.0)
 Imports:
     methods,
-    raster
+    raster,
+    lubridate,
+    tibble
 RoxygenNote: 5.0.1

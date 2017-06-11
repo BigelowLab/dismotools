@@ -126,7 +126,7 @@ maxent_get_varnames <- function(object){
 #' }
 maxent_get_results <- function(object, name){
    stopifnot(inherits(object, 'MaxEnt'))
-   if (is.null(object@results) || is.null(colnames(object@results)) ) return(NULL)
+   if (is.null(object@results) || is.null(rownames(object@results)) ) return(NULL)
    nm <- tolower(name[1])
    if (nm == 'contribution'){
       vn <- maxent_get_varnames(object)
