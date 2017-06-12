@@ -4,10 +4,13 @@
 \alias{today}
 \title{Compute today's date as POSIXct}
 \usage{
-today(tz = "UTC")
+today(x = as.POSIXct(paste(Sys.Date(), "00:00:00"), tz = tz),
+  form = c("POSIXct", "\%Y-\%m-\%d", "week", "season")[1], tz = "UTC")
 }
 \arguments{
-\item{tz}{character time zone}
+\item{x}{POSIXct or charcater date to be converted with as.POSIXct()}
+
+\item{form}{the form of the date returned, possible a formatting pattern}
 }
 \value{
 POSIXct

@@ -30,6 +30,17 @@ date_to_seasonstart <- function(x){
 }
 
 
+#' Convert to as POSIXct to an 8D week number (1-46) or 7D week number (1-52)
+#' 
+#' @export
+#' @param x POSIXct or Date vector
+#' @param week_length numeric, the number of days per week
+#' @return numeric 1-46 or 1-52 week number
+date_to_week <- function(x = today(), week_length = c(8,7)[1]){
+    J <- as.numeric(format(x, "%j"))
+    (J-1) %/% week_length + 1
+}
+
 #' Compute the prior season specified for each provided date. 
 #'
 #' Consider a spring (MAM) input date, the prior MAM will be 1 year before,
@@ -106,13 +117,21 @@ seq_season <- function(
 }
 
 
+
+
 #' Compute today's date as POSIXct
 #'
 #' @export
-#' @param tz character time zone
+#' @param x POSIXct or charcater date to be converted with as.POSIXct()
+#' @param form the form of the date returned, possible a formatting pattern
 #' @return POSIXct
-today <- function(tz = 'UTC'){
-    as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = tz)
+today <- function(x = as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = tz),
+    form = c('POSIXct', "%Y-%m-%d", 'week', 'season')[1], tz = 'UTC'){
+    switch(form[1],
+        'week' = date_to_week(x),
+        'season' = date_to_seasonstart(x),
+        'POSIXct' = x,
+        format(x, form[1]))
 }
 
 #' Compute the next n day
@@ -125,7 +144,9 @@ tomorrow <- function(x = today(), n = 1){
     x + (n * 86400)
 }
 
-#' Compute the prior n day
+#' Compute the prior n day.
+#'
+#' A wrapper around \code{tomorrow()}
 #'
 #' @export
 #' @param x POSIXct date as a starting date, generally \code{today()}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/datetime.R
 \name{yesterday}
 \alias{yesterday}
-\title{Compute the prior n day}
+\title{Compute the prior n day.}
 \usage{
 yesterday(x = today(), n = -1)
 }
@@ -15,6 +15,6 @@ yesterday(x = today(), n = -1)
 POSIXct
 }
 \description{
-Compute the prior n day
+A wrapper around \code{tomorrow()}
 }
 
