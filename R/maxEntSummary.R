@@ -25,8 +25,7 @@ cleaned_results <- function(version_path){
   #create new dataframe 
   auc_list <- lapply(filtered_list,dismotools::maxent_get_results,"AUC")
   contributor_matrix <- lapply(filtered_list, dismotools::maxent_get_results,"contribution")
-  
- cleaned.df <-as.data.frame(rbind(contributor_matrix[[1]]))
+  cleaned.df <-as.data.frame(rbind(contributor_matrix[[1]]))
 
   # add contributors to dataframe
   for (i in 2:length(contributor_matrix)){
@@ -35,6 +34,9 @@ cleaned_results <- function(version_path){
   
   # add AUC to dataframe
   cleaned.df$auc = auc_list
+  
+  # write out cleaned csv
+  write.csv(file=version_path, x=cleaned.df)
 
     
 }
