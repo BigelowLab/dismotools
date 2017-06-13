@@ -35,6 +35,9 @@ cleaned_results <- function(version_path){
   
   # add AUC to dataframe
   cleaned.df$auc = auc_list
+ 
+ # write out cleaned csv
+  write.csv(file=version_path, x=cleaned.df)
 
     
 }
