@@ -26,9 +26,16 @@ cleaned_results <- function(version_path){
   auc_list <- lapply(filtered_list,dismotools::maxent_get_results,"AUC")
   contributor_matrix <- lapply(filtered_list, dismotools::maxent_get_results,"contribution")
   
-  str( contributor_matrix)
+ cleaned.df <-as.data.frame(rbind(contributor_matrix[[1]]))
 
-  #cleaned_data.df <- as.data.frame(as.table(contributor_matrix))
+  # add contributors to dataframe
+  for (i in 2:length(contributor_matrix)){
+    cleaned.df = rbind(cleaned.df,contributor_matrix[[i]])
+  }
+  
+  # add AUC to dataframe
+  cleaned.df$auc = auc_list
+
     
 }
 
