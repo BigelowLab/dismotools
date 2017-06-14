@@ -12,7 +12,7 @@ maxent_assemble <- function(version_path, drop_empty=TRUE){
    # find and read in maxEnt models
   model_list <-list.dirs(path = version_path, recursive = FALSE)
   if (length(model_list) == 0) return(list())
-  
+
   names(model_list) <- basename(model_list)
   
   model_list <- try(lapply(model_list,dismotools::read_maxent))
@@ -72,4 +72,3 @@ maxent_create_resultset <- function(models, filename){
   return(cleaned.df)
   
 }
-
