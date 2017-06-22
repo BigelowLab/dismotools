@@ -131,9 +131,11 @@ maxent_get_results <- function(object, name){
    if (nm == 'contribution'){
       vn <- maxent_get_varnames(object)
       x <- object@results[paste0(vn,".contribution"),]
+      names(x) <- gsub(".contribution", "", names(x), fixed = TRUE)
    } else if (nm == 'importance'){
       vn <- maxent_get_varnames(object)
       x <- object@results[paste0(vn,".permutation.importance"),]
+      names(x) <- gsub(".permutation.importance", "", names(x), fixed = TRUE)
    } else if(grepl("auc", tolower(name[1]), fixed = TRUE)){
       x <- object@results['Training.AUC',]
    } else{
