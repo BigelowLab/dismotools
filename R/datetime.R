@@ -139,9 +139,10 @@ today <- function(x = as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = tz),
 #' @export
 #' @param x POSIXct date as a starting date, generally \code{today()}
 #' @param n the number of days ahead (or behind if negative)
+#' @param ... firther arguments for \code{today()} including form
 #' @return POSIXct
-tomorrow <- function(x = today(), n = 1){
-    x + (n * 86400)
+tomorrow <- function(x = today(), n = 1, ...){
+    today(x + (n * 86400), ...)
 }
 
 #' Compute the prior n day.
@@ -151,7 +152,8 @@ tomorrow <- function(x = today(), n = 1){
 #' @export
 #' @param x POSIXct date as a starting date, generally \code{today()}
 #' @param n the number of days prior (or ahead if positive)
+#' @param ... firther arguments for \code{today()} including form
 #' @return POSIXct
-yesterday <- function(x = today(), n = -1){
-    tomorrow(x, n = n)
+yesterday <- function(x = today(), n = -1, ...){
+    today(x + (n * 86400), ...)
 }

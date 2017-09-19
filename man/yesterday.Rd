@@ -4,12 +4,14 @@
 \alias{yesterday}
 \title{Compute the prior n day.}
 \usage{
-yesterday(x = today(), n = -1)
+yesterday(x = today(), n = -1, ...)
 }
 \arguments{
 \item{x}{POSIXct date as a starting date, generally \code{today()}}
 
 \item{n}{the number of days prior (or ahead if positive)}
+
+\item{...}{firther arguments for \code{today()} including form}
 }
 \value{
 POSIXct

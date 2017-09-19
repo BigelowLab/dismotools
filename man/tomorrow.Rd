@@ -4,12 +4,14 @@
 \alias{tomorrow}
 \title{Compute the next n day}
 \usage{
-tomorrow(x = today(), n = 1)
+tomorrow(x = today(), n = 1, ...)
 }
 \arguments{
 \item{x}{POSIXct date as a starting date, generally \code{today()}}
 
 \item{n}{the number of days ahead (or behind if negative)}
+
+\item{...}{firther arguments for \code{today()} including form}
 }
 \value{
 POSIXct
