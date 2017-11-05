@@ -20,7 +20,7 @@
 animate_gif <- function(R, ..., 
     other_layers = NULL, 
     width = 480, height = 480,
-    output_filename = file.path(getwd(), "animation.gif"),
+    output_filename = file.path(".", "animation.gif"),
     tmppath = tempfile(pattern = 'animation'), 
     convert_extra = "-loop 0 -delay 50"){  
 
@@ -49,17 +49,21 @@ animate_gif <- function(R, ...,
   
   # move to the directory
   origdir <- setwd(tmppath)
-
+  
+  ofile = basename(output_filename)
   # craft the convert file iterator "1.png", "2.png", ...
-  cat("converting to ", output_filename,"\n")
+  cat("converting to ", ofile,"\n")
+  ofile = file.path(getwd(), ofile)
   inputs <- paste0("%d.png[1-", length(nm), "]")
-  CMD <- paste("convert", inputs, convert_extra, output_filename)
+  CMD <- paste("convert", inputs, convert_extra, ofile)
     
   # send the command to the shell
   return_value <- system(CMD)   
   
   # tidy - remove files and return user to original location
   setwd(origdir)
+  ok = file.rename(ofile, output_filename)
+  
   if (return_value == 0) {
     ok <- system(paste("rm -rf", tmppath))
   }
