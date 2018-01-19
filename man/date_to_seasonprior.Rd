@@ -4,7 +4,7 @@
 \alias{date_to_seasonprior}
 \title{Compute the prior season specified for each provided date.}
 \usage{
-date_to_seasonprior(x = tickdata::read_obs()$date)
+date_to_seasonprior(x = today())
 }
 \arguments{
 \item{x}{POSIXct or Date vector}

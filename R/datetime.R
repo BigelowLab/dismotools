@@ -20,8 +20,6 @@ date_to_seasonname <- function(x,
 #'
 #' @export
 #' @param x POSIXct or Date vector
-#' @param lut charcater vector of length 12.  x is converted to month number
-#'  and is then used as a index into this look up table
 #' @return POSIXct date that starts the season a date belongs to
 date_to_seasonstart <- function(x){
     r <- range(x)
@@ -31,7 +29,7 @@ date_to_seasonstart <- function(x){
 
 
 #' Convert to as POSIXct to an 8D week number (1-46) or 7D week number (1-52)
-#' 
+#'
 #' @export
 #' @param x POSIXct or Date vector
 #' @param week_length numeric, the number of days per week
@@ -41,11 +39,11 @@ date_to_week <- function(x = today(), week_length = c(8,7)[1]){
     (J-1) %/% week_length + 1
 }
 
-#' Compute the prior season specified for each provided date. 
+#' Compute the prior season specified for each provided date.
 #'
 #' Consider a spring (MAM) input date, the prior MAM will be 1 year before,
 #'  while the prior DJF will be just three months before.
-#' 
+#'
 #' @export
 #' @param x POSIXct or Date vector
 #' @return tibble with 5 columns of POSIXct vectors
@@ -56,8 +54,8 @@ date_to_week <- function(x = today(), week_length = c(8,7)[1]){
 #'      \item{JJA prior summer start dates}
 #'      \item{SON prior autumn start dates}
 #' }
-date_to_seasonprior <- function(x = tickdata::read_obs()$date){
-    
+date_to_seasonprior <- function(x = today()){
+
     # get the range of dates, and dial the first one back on year
     r <- range(x)
     r[1] <- r[1] - 366*24*60*60
@@ -66,12 +64,12 @@ date_to_seasonprior <- function(x = tickdata::read_obs()$date){
     S_name <- date_to_seasonname(S)
     fS_name <- as.factor(S_name)
     SS <- split(S,fS_name)
-    
+
     x_czn <- date_to_seasonstart(x)
-    
+
     czn <- c("DJF", "MAM", "JJA", "SON")
     names(czn) <- czn
-    
+
     X <- lapply(czn,
         function(cname){
             ix <- findInterval(x, SS[[cname]])
@@ -80,22 +78,22 @@ date_to_seasonprior <- function(x = tickdata::read_obs()$date){
             if (any(iy)) y[iy] <- SS[[cname]][ix[iy]-1]
             y
         })
-    
+
     X <- tibble::as.tibble(X)
-    tibble::add_column(X, x, .before = 1)   
+    tibble::add_column(X, x, .before = 1)
 }
 
 
 #' Generate a sequence of POSIXct by season start dates
-#' 
+#'
 #' @export
 #' @param from POSIXct, the starting date
 #' @param to POSIXct, the ending date
 #' @return POSIXct sequence
 seq_season <- function(
     from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"),
-    to = namtools::today()){
-    
+    to = today()){
+
     fy <- lubridate::year(from[1])
     fm <- lubridate::month(from[1])
     # note there are 12 entries
@@ -112,8 +110,8 @@ seq_season <- function(
         lubridate::ymd_hms(paste0(fy,"-09-01 00:00:00"), tz = "UTC", quiet = TRUE),
         lubridate::ymd_hms(paste0(fy,"-09-01 00:00:00"), tz = "UTC", quiet = TRUE),
         lubridate::ymd_hms(paste0(fy,"-12-01 00:00:00"), tz = "UTC", quiet = TRUE))
-        
-    seq(from = from[1], to = to[1], by = '3 months')      
+
+    seq(from = from[1], to = to[1], by = '3 months')
 }
 
 
@@ -125,8 +123,8 @@ seq_season <- function(
 #' @param x POSIXct or charcater date to be converted with as.POSIXct()
 #' @param form the form of the date returned, possible a formatting pattern
 #' @return POSIXct
-today <- function(x = as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = tz),
-    form = c('POSIXct', "%Y-%m-%d", 'week', 'season')[1], tz = 'UTC'){
+today <- function(x = as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = 'UTC'),
+    form = c('POSIXct', "%Y-%m-%d", 'week', 'season')[1]){
     switch(form[1],
         'week' = date_to_week(x),
         'season' = date_to_seasonstart(x),

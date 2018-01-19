@@ -11,8 +11,9 @@ maxent_assemble_results(x, include = c("auc", "contribution"))
 
 \item{include}{character vector fo one or more components to include in the result
 - ignored for now}
-
-\item{data.frame}{or NULL  Results for 'empty' models are excluded}
+}
+\value{
+data.frame or NULL  Results for 'empty' models are excluded
 }
 \description{
 Given a list of maxent models prepare a data frame of results

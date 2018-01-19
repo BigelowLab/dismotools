@@ -12,7 +12,7 @@ animate_gif(R, ..., other_layers = NULL, width = 480, height = 480,
 \arguments{
 \item{R}{a multi-layer raster object}
 
-\item{...}{further arguments for rasterVis::levelplot like 
+\item{...}{further arguments for rasterVis::levelplot like
  \itemize{
    \item{margin}
    \item{at}
@@ -21,16 +21,22 @@ animate_gif(R, ..., other_layers = NULL, width = 480, height = 480,
 
 \item{other_layers}{a list of one or more latticeExtra::layer or list of layers}
 
+\item{width}{numeric image width in pixels}
+
+\item{height}{image height in pixels}
+
 \item{output_filename}{the name of the output file, by default 'animation.gif'}
 
-\item{convert_extra}{character of extra conver arguments.  Defaults to 
+\item{tmppath}{string, temporary working directory to use}
+
+\item{convert_extra}{character of extra conver arguments.  Defaults to
 "-loop 0 -delay = 50" for infinte looping and 0.5s per frame}
 }
 \value{
 the numeric value returned by convert
 }
 \description{
-This is Unix/Linix centric.
+This is Unix/Linux centric.
 }
 \seealso{
 \url{http://www.imagemagick.org/Usage/anim_basics/}

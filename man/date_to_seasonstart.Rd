@@ -8,9 +8,6 @@ date_to_seasonstart(x)
 }
 \arguments{
 \item{x}{POSIXct or Date vector}
-
-\item{lut}{charcater vector of length 12.  x is converted to month number
-and is then used as a index into this look up table}
 }
 \value{
 POSIXct date that starts the season a date belongs to

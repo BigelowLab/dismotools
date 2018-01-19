@@ -7,7 +7,7 @@
 maxent_assemble(version_path, drop_empty = TRUE)
 }
 \arguments{
-\item{version_path}{path to directory containing one or more 
+\item{version_path}{path to directory containing one or more
 maxent model directories}
 
 \item{drop_empty}{logical if TRUE drop empty models}

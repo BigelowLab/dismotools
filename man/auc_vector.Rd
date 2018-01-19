@@ -14,7 +14,7 @@ auc_vector(f, v, thr = seq(from = 1, to = 0, by = -0.001))
 \item{thr}{a vector of threshold values}
 }
 \value{
-a list of 
+a list of
 \itemize{
  \item{fpa, a vector of fpa (fractional predicted area)}
  \item{sensitive, a vector of sensitivity (1-omission rate)}
