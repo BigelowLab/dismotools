@@ -15,7 +15,7 @@ if r has multiple layers then xy should also have column 'layer'}
 \item{...}{further arguments for \code{auc_vector}}
 }
 \value{
-a list of 
+a list of
 \itemize{
  \item{fpa, a vector of fractional predicted area}
  \item{sensitive,a vector of sensitivity (1-omission rate)}

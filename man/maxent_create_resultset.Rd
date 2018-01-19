@@ -2,7 +2,7 @@
 % Please edit documentation in R/maxEntSummary.R
 \name{maxent_create_resultset}
 \alias{maxent_create_resultset}
-\title{Creates dataset of results of a set of maxEnt models. 
+\title{Creates dataset of results of a set of maxEnt models.
 Dataset contains AUC and contributors of the set of maxEnt models
 Drops models that have failed, then writes dataset to csv}
 \usage{
@@ -17,7 +17,7 @@ maxent_create_resultset(models, filename)
 dataframe
 }
 \description{
-Creates dataset of results of a set of maxEnt models. 
+Creates dataset of results of a set of maxEnt models.
 Dataset contains AUC and contributors of the set of maxEnt models
 Drops models that have failed, then writes dataset to csv
 }

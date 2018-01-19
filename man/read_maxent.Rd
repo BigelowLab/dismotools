@@ -8,7 +8,7 @@ read_maxent(path)
 }
 \arguments{
 \item{path}{fully qualified path to where the MexEnt model is saved
-If multiple paths are provided then a list of models is returned.  
+If multiple paths are provided then a list of models is returned.
 You just have to keep track of this yourself so you aren't surprised.}
 }
 \value{
