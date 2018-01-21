@@ -31,6 +31,7 @@ maxent_assemble_results <- function(x,
 #'  You just have to keep track of this yourself so you aren't surprised.
 #' @return a MaxEnt model object, a list of Maxent models or NULL
 read_maxent <- function(path){
+
    if (length(path) > 1) {
         x <- lapply(path, read_maxent)
         names(x) <- basename(path)
@@ -78,7 +79,8 @@ read_maxent <- function(path){
    results <- me_read_results()
    presence <- me_read_presence()
    absence <- me_read_absence()
-   X <- methods::new('MaxEnt')
+   #X <- methods::new('MaxEnt')
+   X <- readRDS(system.file("emptyMaxent.rds", package = 'dismotools'))
    if (!is.null(lambdas)) methods::slot(X, 'lambdas') <- lambdas
    if (!is.null(results)) methods::slot(X, 'results') <- results
    methods::slot(X, 'path') <- path
