@@ -23,4 +23,3 @@ tibble with 5 columns of POSIXct vectors
 Consider a spring (MAM) input date, the prior MAM will be 1 year before,
  while the prior DJF will be just three months before.
 }
-

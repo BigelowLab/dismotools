@@ -23,4 +23,3 @@ Retrieve the results of a MaxEnt model by name
  contrib <- maxent_get_results(object, 'contribution')
 }
 }
-

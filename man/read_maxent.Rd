@@ -17,4 +17,3 @@ a MaxEnt model object, a list of Maxent models or NULL
 \description{
 Read a dismo::MaxEnt model saved in a directory.
 }
-

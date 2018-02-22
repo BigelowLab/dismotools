@@ -18,4 +18,3 @@ POSIXct sequence
 \description{
 Generate a sequence of POSIXct by season start dates
 }
-

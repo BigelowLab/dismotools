@@ -25,4 +25,3 @@ a vector of values
 \description{
 Extract values from a multilayer Raster*
 }
-

@@ -18,4 +18,3 @@ a list of zero or more maxent models
 \description{
 Read one or more maxent models stored in a path
 }
-

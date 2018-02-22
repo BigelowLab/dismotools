@@ -19,4 +19,3 @@ charcater vector of season names, same length as x
 \description{
 Compute a season from POSIXct or Date values
 }
-

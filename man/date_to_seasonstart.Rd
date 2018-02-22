@@ -15,4 +15,3 @@ POSIXct date that starts the season a date belongs to
 \description{
 Compute a season start from POSIXct or Date values
 }
-

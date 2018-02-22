@@ -28,4 +28,3 @@ Given a Raster* object and point locations compute the AUC
 \seealso{
 \code{auc_vector}
 }
-

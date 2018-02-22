@@ -15,4 +15,3 @@ a matrix of results as per MaxEnt@results
 \description{
 Read MaxEnt results from a text file
 }
-

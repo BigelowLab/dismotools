@@ -15,4 +15,3 @@ characater vector of variable names or NULL
 \description{
 Retrieve the names of the input variables of a maxent model
 }
-

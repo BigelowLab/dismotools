@@ -10,4 +10,3 @@ Extra functionality for working with raster and dismo packages including model
 reading, model parameter extraction, sampling and extraction from multilayer 
 raster objects.
 }
-

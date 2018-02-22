@@ -1,3 +1,32 @@
+#' Create a gif animatation using ImageMagick's convert
+#'
+#' @export
+#' @seealso \url{http://www.imagemagick.org/Usage/anim_basics/}
+#' @seealso \url{http://imagemagick.org/script/command-line-processing.php}
+#' @param FF charcater vector of PNG filenames
+#' @param output_filename the name of the output file, by default 'animation.gif'
+#' @param convert_extra character of extra conver arguments.  Defaults to
+#'  "-loop 0 -delay = 50" for infinte looping and 0.5s per frame
+#' @param the numeric value returned by convert
+images_to_gif <- function(FF,
+    output_filename = "animation.gif",
+    convert_extra = "-loop 0 -delay 50"){
+
+
+    if (nchar(Sys.which("convert")) == 0) stop("convert command not found")
+
+
+    cat(FF, sep = "\n", file = "images.txt")
+    CMD <- paste("convert @images.txt", convert_extra, output_filename)
+
+    # send the command to the shell
+    return_value <- system(CMD)
+    return(return_value)
+}
+
+
+
+
 #' Create a gif animation using rasterVis::levelplot() and ImageMagick's convert
 #'
 #' This is Unix/Linux centric.

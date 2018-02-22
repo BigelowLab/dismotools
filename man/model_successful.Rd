@@ -15,4 +15,3 @@ logical. If model ran successfully?
 \description{
 Checks if a dismo model ran successfully
 }
-

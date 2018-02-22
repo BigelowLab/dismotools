@@ -21,4 +21,3 @@ Creates dataset of results of a set of maxEnt models.
 Dataset contains AUC and contributors of the set of maxEnt models
 Drops models that have failed, then writes dataset to csv
 }
-

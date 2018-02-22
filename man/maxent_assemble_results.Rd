@@ -18,4 +18,3 @@ data.frame or NULL  Results for 'empty' models are excluded
 \description{
 Given a list of maxent models prepare a data frame of results
 }
-

@@ -19,4 +19,3 @@ POSIXct
 \description{
 Compute the next n day
 }
-

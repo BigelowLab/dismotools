@@ -24,4 +24,3 @@ vector or cell numbers
 \description{
 This function is essentially a wrapper around the \code{raster::cellFrom*()} functions.
 }
-

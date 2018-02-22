@@ -18,4 +18,3 @@ POSIXct
 \description{
 Compute today's date as POSIXct
 }
-

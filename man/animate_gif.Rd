@@ -43,4 +43,3 @@ This is Unix/Linux centric.
 
 \url{http://imagemagick.org/script/command-line-processing.php}
 }
-

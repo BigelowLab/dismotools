@@ -19,4 +19,3 @@ POSIXct
 \description{
 A wrapper around \code{tomorrow()}
 }
-

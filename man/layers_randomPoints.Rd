@@ -37,4 +37,3 @@ data.frame of sampled points with the following
 \description{
 Select N non-NA random points from a mulitlayer Raster* object
 }
-

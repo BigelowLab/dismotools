@@ -24,4 +24,3 @@ a list of
 \description{
 Compute AUC values ala presence-only data
 }
-

@@ -17,4 +17,3 @@ numeric 1-46 or 1-52 week number
 \description{
 Convert to as POSIXct to an 8D week number (1-46) or 7D week number (1-52)
 }
-
