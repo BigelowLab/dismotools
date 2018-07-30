@@ -1,3 +1,49 @@
+#' Write a maxent summary file
+#'
+#' @export
+#' @param x list of maxent summary
+#' @param filename optional filename to write to, by default file.path(x$path, "summary.txt")
+maxent_write_summary <- function(x, filename = NULL){
+    if (is.null(filename)) filename = file.path(x$path, "summary.txt")
+    conn = file(filename, open = 'wt')
+    cat("[summary]\n", file = conn)
+    cat(sprintf("path: %s",x$path), "\n", file = conn)
+    cat(sprintf("auc: %0.4f",x$auc), "\n", file = conn)
+    cat(sprintf("predictors: %s", paste(x$predictors, collapse = " ")), "\n", file = conn)
+    cat(sprintf("presence count: %i", x$p_count), "\n", file = conn)
+    cat(sprintf("background count: %i", x$b_count), "\n", file = conn)
+    cat("contributions:\n", file = conn)
+    write.csv(x$contrib, row.names = TRUE, file = conn)
+    close(conn)
+    x
+}
+
+#' Summarize a maxent model
+#'
+#' @export
+#' @param x a MaxEnt model
+#' @param save_summary logical, if TRUE then save to a text file as summary.txt
+#' @param ... further arguments for maxent_write_summary
+#' @return a list with summary information
+#' \itemize{
+#'  \item{path name of the model}
+#'  \item{auc AUC value}
+#'  \item{predictors vector of predictor names}
+#'  \item{contrib data.frame of contributions by each predictor}
+#'  \item{p_count number of presence points}
+#'  \item{b_cound number of background points}
+#'  }
+maxent_summary <- function(x, save_summary = FALSE, ...){
+    r = list(
+        path = x@path,
+        auc = maxent_get_results(x,"auc"),
+        predictors = maxent_get_varnames(x),
+        p_count = nrow(x@presence),
+        b_count = nrow(x@absence),
+        contrib = maxent_get_results(x,"contribution"))
+    if (save_summary) ok = maxent_write_summary(r, ...)
+    r
+}
 
 #' Given a list of maxent models prepare a data frame of results
 #'

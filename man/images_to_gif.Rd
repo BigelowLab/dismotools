@@ -14,8 +14,9 @@ images_to_gif(FF, output_filename = "animation.gif",
 
 \item{convert_extra}{character of extra conver arguments.  Defaults to
 "-loop 0 -delay = 50" for infinte looping and 0.5s per frame}
-
-\item{the}{numeric value returned by convert}
+}
+\value{
+the numeric value returned by convert
 }
 \description{
 Create a gif animatation using ImageMagick's convert

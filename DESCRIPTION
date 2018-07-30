@@ -17,5 +17,6 @@ Imports:
     lubridate,
     tibble,
     grDevices,
-    rasterVis
+    rasterVis,
+    readr
 RoxygenNote: 6.0.1

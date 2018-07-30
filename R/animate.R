@@ -7,7 +7,7 @@
 #' @param output_filename the name of the output file, by default 'animation.gif'
 #' @param convert_extra character of extra conver arguments.  Defaults to
 #'  "-loop 0 -delay = 50" for infinte looping and 0.5s per frame
-#' @param the numeric value returned by convert
+#' @return the numeric value returned by convert
 images_to_gif <- function(FF,
     output_filename = "animation.gif",
     convert_extra = "-loop 0 -delay 50"){
