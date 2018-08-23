@@ -39,6 +39,23 @@ date_to_week <- function(x = today(), week_length = c(8,7)[1]){
     (J-1) %/% week_length + 1
 }
 
+
+#' Convert a Date, character, or POSIXlt to POSIXct
+#'
+#' @export
+#' @param x vector of Date objects
+#' @param time character time of day, defaults to '00:00:00'
+#' @param tz character time zone, defaults to 'UTC'
+#' @param format for character inputs, the format defaults to '%Y-%m-%d %H:%M:%S'
+#' @return POSIXct
+as_POSIXct <- function(x, time = '00:00:00', tz = 'UTC', format = '%Y-%m-%d %H:%M:%S'){
+    if (inherits(x, 'POSIXct')) return(x)
+    if (inherits(x, 'Date')) x <- as.POSIXct(sprintf("%s %s", format(x, '%Y-%m-%d'), time), tz = tz)
+    if (inherits(x, 'POSIXlt')) x <- as.POSIXct(x)
+    if (inherits(x, 'character')) x <- as.POSIXct(x, format = format, tz = tz)
+    return(x)
+}
+
 #' Compute the prior season specified for each provided date.
 #'
 #' Consider a spring (MAM) input date, the prior MAM will be 1 year before,
@@ -56,6 +73,7 @@ date_to_week <- function(x = today(), week_length = c(8,7)[1]){
 #' }
 date_to_seasonprior <- function(x = today()){
 
+    if (inherits(x, 'Date')) x = as_POSIXct(x)
     # get the range of dates, and dial the first one back on year
     r <- range(x)
     r[1] <- r[1] - 366*24*60*60
@@ -94,6 +112,9 @@ seq_season <- function(
     from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"),
     to = today()){
 
+    if (inherits(from, 'Date')) from =  as_POSIXct(from)
+    if (inherits(to, 'Date'))   to = as_POSIXct(to)
+
     fy <- lubridate::year(from[1])
     fm <- lubridate::month(from[1])
     # note there are 12 entries
@@ -124,10 +145,11 @@ seq_season <- function(
 #' @param form the form of the date returned, possible a formatting pattern
 #' @return POSIXct
 today <- function(x = as.POSIXct(paste(Sys.Date(), "00:00:00"),tz = 'UTC'),
-    form = c('POSIXct', "%Y-%m-%d", 'week', 'season')[1]){
+    form = c('POSIXct', "Date", "%Y-%m-%d", 'week', 'season')[1]){
     switch(form[1],
         'week' = date_to_week(x),
         'season' = date_to_seasonstart(x),
+        "Date"   = as.Date(x),
         'POSIXct' = x,
         format(x, form[1]))
 }

@@ -5,7 +5,7 @@
 \title{Compute today's date as POSIXct}
 \usage{
 today(x = as.POSIXct(paste(Sys.Date(), "00:00:00"), tz = "UTC"),
-  form = c("POSIXct", "\%Y-\%m-\%d", "week", "season")[1])
+  form = c("POSIXct", "Date", "\%Y-\%m-\%d", "week", "season")[1])
 }
 \arguments{
 \item{x}{POSIXct or charcater date to be converted with as.POSIXct()}
