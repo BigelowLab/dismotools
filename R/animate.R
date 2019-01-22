@@ -94,7 +94,8 @@ animate_gif <- function(R, ...,
 
   # tidy - remove files and return user to original location
   setwd(origdir)
-  ok = file.rename(ofile, output_filename)
+  ok <- system(paste("cp", ofile, output_filename))
+  #ok = file.rename(ofile, output_filename)
 
   if (return_value == 0) {
     ok <- system(paste("rm -rf", tmppath))
