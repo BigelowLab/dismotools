@@ -6,7 +6,7 @@
 \alias{dismotools-package}
 \title{dismotools: Handy tools for the raster and dismo packages.}
 \description{
-Extra functionality for working with raster and dismo packages including model 
-reading, model parameter extraction, sampling and extraction from multilayer 
+Extra functionality for working with raster and dismo packages including model
+reading, model parameter extraction, sampling and extraction from multilayer
 raster objects.
 }

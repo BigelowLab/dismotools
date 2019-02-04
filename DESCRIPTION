@@ -7,6 +7,7 @@ Version: 0.1
 Maintainer: Ben Tupper <btupper@bigelow.org>
 Author: Nick Record <nrecord@bigelow.org> and Ben Tupper <btupper@bigelow.org>
 License: MIT + file LICENSE
+Encoding: UTF-8
 Depends:
     R (>= 3.0)
 Imports:
@@ -14,7 +15,9 @@ Imports:
     methods,
     dismo,
     raster,
+    magrittr,
     lubridate,
+    dplyr,
     tibble,
     grDevices,
     rasterVis,
