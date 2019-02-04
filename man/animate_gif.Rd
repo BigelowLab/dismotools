@@ -4,9 +4,9 @@
 \alias{animate_gif}
 \title{Create a gif animation using rasterVis::levelplot() and ImageMagick's convert}
 \usage{
-animate_gif(R, ..., other_layers = NULL, width = 480, height = 480,
-  output_filename = file.path(".", "animation.gif"),
-  tmppath = tempfile(pattern = "animation"),
+animate_gif(R, ..., mains = names(R), other_layers = NULL,
+  width = 480, height = 480, output_filename = file.path(".",
+  "animation.gif"), tmppath = tempfile(pattern = "animation"),
   convert_extra = "-loop 0 -delay 50")
 }
 \arguments{
@@ -18,6 +18,8 @@ animate_gif(R, ..., other_layers = NULL, width = 480, height = 480,
    \item{at}
    \item{par.settings}
 }}
+
+\item{mains}{character vector of names to apply to each plot, by default the layer names}
 
 \item{other_layers}{a list of one or more latticeExtra::layer or list of layers}
 

@@ -41,6 +41,7 @@ images_to_gif <- function(FF,
 #'     \item{at}
 #'     \item{par.settings}
 #'  }
+#' @param mains character vector of names to apply to each plot, by default the layer names
 #' @param width numeric image width in pixels
 #' @param height image height in pixels
 #' @param tmppath string, temporary working directory to use
@@ -50,6 +51,7 @@ images_to_gif <- function(FF,
 #'  "-loop 0 -delay = 50" for infinte looping and 0.5s per frame
 #' @return the numeric value returned by convert
 animate_gif <- function(R, ...,
+    mains = names(R),
     other_layers = NULL,
     width = 480, height = 480,
     output_filename = file.path(".", "animation.gif"),
@@ -69,7 +71,7 @@ animate_gif <- function(R, ...,
   ofile <- file.path(tmppath, fname)
 
   for (i in seq_along(ofile)){
-    plot_obj <- rasterVis::levelplot(R[[i]], main = nm[i], ...)
+    plot_obj <- rasterVis::levelplot(R[[i]], main = mains[i], ...)
     if (!is.null(other_layers)) {
         if (!inherits(other_layers, 'list')) other_layers = list(other_layers)
         for (ol in other_layers) plot_obj <- plot_obj + ol
