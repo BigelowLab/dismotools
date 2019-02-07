@@ -7,13 +7,13 @@
 layers_extractPoints(R, pts)
 }
 \arguments{
-\item{R}{a multilayer Raster* object}
+\item{R}{a single or multilayer Raster* object}
 
-\item{pts}{location info for points to be extracted. Must be a data frame 
+\item{pts}{location info for points to be extracted. Must be a data frame
  or matrix with either set of the following columns. Note that layer (or z)
  may be either a layer index number or layer names.
 \itemize{
-     \item{'cell' and 'layer' (or 'z')} 
+     \item{'cell' and 'layer' (or 'z')}
      \item{'row', 'col' and 'layer' (or 'z')}
      \item{'lon', 'lat' and 'layer' (or 'z')}
      \item{'x', 'y' and 'layer' (or 'z')}

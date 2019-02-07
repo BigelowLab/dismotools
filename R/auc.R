@@ -13,28 +13,28 @@
 #'  \item{area, scalar AUC value}
 #'  }
 auc_raster <- function(R, xy, ...){
-
-    if (raster::nlayers(R) > 1){
-        v <- layers_extractPoints(R, xy)
-    } else {
-        v <- raster::extract(R, xy)
-    }
-    auc_vector(raster::values(R), v, ...)
+    v <- layers_extractPoints(R, xy)
+    auc_vector(as.vector(raster::values(R)), v, ...)
 }
 
 #' Compute AUC values ala presence-only data
 #'
 #' @export
-#' @param f a vector of forecasted ranked suitability values, NAs will be removed
-#' @param v a vector of forecasted values where there are presences, NAs will be removed
+#' @param f a vector of forecasted ranked suitability values, NaNs and NAs will be removed
+#' @param v a vector of forecasted values where there are presences, NaNs and NAs will be removed
 #' @param thr a vector of threshold values
+#' @param method character, if 'fast' (the default) use the fast implementation
 #' @return a list of
 #' \itemize{
 #'  \item{fpa, a vector of fpa (fractional predicted area)}
 #'  \item{sensitive, a vector of sensitivity (1-omission rate)}
 #'  \item{area, AUC}
 #'  }
-auc_vector <- function(f, v, thr = seq(from = 1, to = 0, by = -0.001)){
+auc_vector <- function(f, v, thr = seq(from = 1, to = 0, by = -0.001),
+                       method = 'fast'){
+
+    if (tolower(method[1]) == 'fast') return(auc_vector_fast(f,v,thr = thr))
+
     f <- f[!is.na(f)]
     fn <- length(f)
     v <- v[!is.na(v)]
@@ -47,7 +47,43 @@ auc_vector <- function(f, v, thr = seq(from = 1, to = 0, by = -0.001)){
         iy <- sum(v > thr[i])
         y[i] <- iy/vn
     }
-
     list(fpa = x, sensitivity = y,
         area = sum(diff(x) * (y[2:length(y)]+ y[1:length(y)-1])/2) )
+
+}
+
+#' Compute AUC values ala presence-only data using a fast algorithm.
+#'
+#' This function gains speed using \code{Rfast::Sort()} and \code{base::findInterval()}
+#'
+#' @export
+#' @param f a vector of forecasted ranked suitability values, NaNs and NAs will be removed
+#' @param v a vector of forecasted values where there are presences, NaNs and NAs will be removed
+#' @param thr a vector of threshold values
+#' @return a list of
+#' \itemize{
+#'  \item{fpa, a vector of fpa (fractional predicted area)}
+#'  \item{sensitive, a vector of sensitivity (1-omission rate)}
+#'  \item{area, AUC}
+#'  }
+auc_vector_fast <- function(f, v, thr = seq(from = 1, to = 0, by = -0.001)){
+
+    f   <- f[is.finite(f)]
+    f   <- Rfast::Sort(f, na.last = NA)
+    fn  <- length(f)
+    v   <- v[is.finite(v)]
+    v   <- Rfast::Sort(v, na.last = NA)
+    vn  <- length(v)
+    x   <- rep(0, length(thr))
+    y   <- x
+
+    fix <- findInterval(thr, f)
+    vix <- findInterval(thr, v)
+    x   <- (fn - fix)/fn
+    y   <- (vn - vix)/vn
+    a   <- sum(diff(x) * (y[2:length(y)] + y[1:length(y)-1])/2)
+
+    list(fpa = x,
+         sensitivity = y,
+         area = a)
 }

@@ -9,12 +9,12 @@ layers_randomPoints(R, pts = NULL, N = 1000)
 \arguments{
 \item{R}{a multilayer Raster* object}
 
-\item{pts}{xyz values for presence points [lon, lat, layer] - these 
- locations are avoided when sampling. Ignored if NULL.   This must have 
+\item{pts}{xyz values for presence points [lon, lat, layer] - these
+ locations are avoided when sampling. Ignored if NULL.   This must have
  either set of the following columns.  Note that layer (or z)
  may be either a layer index number or layer names.
 \itemize{
-     \item{'cell' and 'layer' (or 'z')} 
+     \item{'cell' and 'layer' (or 'z')}
      \item{'row', 'col' and 'layer' (or 'z')}
      \item{'lon', 'lat' and 'layer' (or 'z')}
      \item{'x', 'y' and 'layer' (or 'z')}
