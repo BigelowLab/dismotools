@@ -65,7 +65,7 @@ layers_extractPoints <- function(R, pts){
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
 
     nl <- as.integer(raster::nlayers(R))
-    if (nl == 1L) return(raster::extractPoints(R, pts))
+    if (nl == 1L) return(raster::extract(R, pts))
 
     nc <- as.integer(raster::ncell(R))
     ny <- raster::nrow(R)

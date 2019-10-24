@@ -46,8 +46,8 @@ date_to_week <- function(x = today(), week_length = c(8,7)[1]){
 #' @param x vector of Date objects
 #' @param time character time of day, defaults to '00:00:00'
 #' @param tz character time zone, defaults to 'UTC'
-#' @param format for character inputs, the format defaults to '%Y-%m-%d %H:%M:%S'
-#' @return POSIXct
+#' @param format for character inputs, the format defaults to 'YYYY-mm-dd HH:MM:SS'
+#' @return POSIXct equivalent of input
 as_POSIXct <- function(x, time = '00:00:00', tz = 'UTC', format = '%Y-%m-%d %H:%M:%S'){
     if (inherits(x, 'POSIXct')) return(x)
     if (inherits(x, 'Date')) x <- as.POSIXct(sprintf("%s %s", format(x, '%Y-%m-%d'), time), tz = tz)

@@ -14,10 +14,10 @@ as_POSIXct(x, time = "00:00:00", tz = "UTC",
 
 \item{tz}{character time zone, defaults to 'UTC'}
 
-\item{format}{for character inputs, the format defaults to '%Y-%m-%d %H:%M:%S'}
+\item{format}{for character inputs, the format defaults to 'YYYY-mm-dd HH:MM:SS'}
 }
 \value{
-POSIXct
+POSIXct equivalent of input
 }
 \description{
 Convert a Date, character, or POSIXlt to POSIXct

@@ -7,9 +7,13 @@
 maxent_write_summary(x, filename = NULL)
 }
 \arguments{
-\item{x}{list of maxent summary}
+\item{x}{list or data frame of maxent summary}
 
-\item{filename}{optional filename to write to, by default file.path(x$path, "summary.txt")}
+\item{filename}{optional filename to write to, by default file.path(x$path, "summary.txt")
+or file.path(x$path, "summary.csv") if input is a data.frame}
+}
+\value{
+the original list or data frame
 }
 \description{
 Write a maxent summary file

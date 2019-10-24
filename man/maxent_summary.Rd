@@ -4,14 +4,20 @@
 \alias{maxent_summary}
 \title{Summarize a maxent model}
 \usage{
-maxent_summary(x, save_summary = FALSE, ...)
+maxent_summary(x, fmt = c("list", "dataframe", "tibble")[3],
+  save_summary = FALSE, ...)
 }
 \arguments{
-\item{x}{a MaxEnt model}
+\item{x}{a MaxEnt model or a list of them.}
 
-\item{save_summary}{logical, if TRUE then save to a text file as summary.txt}
+\item{fmt}{character either 'list' or 'dataframe' or 'tibble' (same as 'dataframe')
+Defines the format of the output.  If x is a list and fmt is 'list' then
+as list is returned, otherwise if x is a lists then a data.frame or tibble is returned.}
 
-\item{...}{further arguments for maxent_write_summary}
+\item{save_summary}{logical, if TRUE then save to a text file as summary.txt
+or summary.csv  Ignored if x is a list}
+
+\item{...}{further arguments for maxent_write_summary, ignored if x is a list}
 }
 \value{
 a list with summary information
@@ -23,6 +29,7 @@ a list with summary information
  \item{p_count number of presence points}
  \item{b_cound number of background points}
  }
+ OR a tibble (data.frame) with the same info in one row
 }
 \description{
 Summarize a maxent model

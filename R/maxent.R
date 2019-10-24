@@ -1,29 +1,41 @@
 #' Write a maxent summary file
 #'
 #' @export
-#' @param x list of maxent summary
+#' @param x list or data frame of maxent summary
 #' @param filename optional filename to write to, by default file.path(x$path, "summary.txt")
+#'        or file.path(x$path, "summary.csv") if input is a data.frame
+#' @return the original list or data frame
 maxent_write_summary <- function(x, filename = NULL){
-    if (is.null(filename)) filename = file.path(x$path, "summary.txt")
-    conn = file(filename, open = 'wt')
-    cat("[summary]\n", file = conn)
-    cat(sprintf("path: %s",x$path), "\n", file = conn)
-    cat(sprintf("auc: %0.4f",x$auc), "\n", file = conn)
-    cat(sprintf("predictors: %s", paste(x$predictors, collapse = " ")), "\n", file = conn)
-    cat(sprintf("presence count: %i", x$p_count), "\n", file = conn)
-    cat(sprintf("background count: %i", x$b_count), "\n", file = conn)
-    cat("contributions:\n", file = conn)
-    write.csv(x$contrib, row.names = TRUE, file = conn)
-    close(conn)
+
+    if (inherits(x, "data.frame")){
+        if (is.null(filename)) filename = file.path(x$path, "summary.csv")
+        x = readr::write_csv(x,filename )
+    } else {
+        if (is.null(filename)) filename = file.path(x$path, "summary.txt")
+        conn = file(filename, open = 'wt')
+        cat("[summary]\n", file = conn)
+        cat(sprintf("path: %s",x$path), "\n", file = conn)
+        cat(sprintf("auc: %0.4f",x$auc), "\n", file = conn)
+        cat(sprintf("predictors: %s", paste(x$predictors, collapse = " ")), "\n", file = conn)
+        cat(sprintf("presence count: %i", x$p_count), "\n", file = conn)
+        cat(sprintf("background count: %i", x$b_count), "\n", file = conn)
+        cat("contributions:\n", file = conn)
+        write.csv(x$contrib, row.names = TRUE, file = conn)
+        close(conn)
+    }
     x
 }
 
 #' Summarize a maxent model
 #'
 #' @export
-#' @param x a MaxEnt model
+#' @param x a MaxEnt model or a list of them.
+#' @param fmt character either 'list' or 'dataframe' or 'tibble' (same as 'dataframe')
+#'    Defines the format of the output.  If x is a list and fmt is 'list' then
+#'    as list is returned, otherwise if x is a lists then a data.frame or tibble is returned.
 #' @param save_summary logical, if TRUE then save to a text file as summary.txt
-#' @param ... further arguments for maxent_write_summary
+#'        or summary.csv  Ignored if x is a list
+#' @param ... further arguments for maxent_write_summary, ignored if x is a list
 #' @return a list with summary information
 #' \itemize{
 #'  \item{path name of the model}
@@ -33,14 +45,40 @@ maxent_write_summary <- function(x, filename = NULL){
 #'  \item{p_count number of presence points}
 #'  \item{b_cound number of background points}
 #'  }
-maxent_summary <- function(x, save_summary = FALSE, ...){
-    r = list(
-        path = x@path,
-        auc = maxent_get_results(x,"auc"),
-        predictors = maxent_get_varnames(x),
-        p_count = nrow(x@presence),
-        b_count = nrow(x@absence),
-        contrib = maxent_get_results(x,"contribution"))
+#'  OR a tibble (data.frame) with the same info in one row
+maxent_summary <- function(x,
+    fmt = c("list", "dataframe", "tibble")[3],
+    save_summary = FALSE, ...){
+
+    if (inherits(x, 'list')){
+      xx <- lapply(x, maxent_summary, fmt = fmt, save_summary = FALSE)
+      r <- switch(tolower(fmt[1]),
+        "list" = xx,
+        dplyr::bind_rows(xx))
+      return(r)
+    }
+
+    if (tolower(fmt[1]) == 'list'){
+        r = list(
+            path = x@path,
+            auc = maxent_get_results(x,"auc"),
+            predictors = maxent_get_varnames(x),
+            p_count = nrow(x@presence),
+            b_count = nrow(x@absence),
+            contrib = maxent_get_results(x,"contribution"))
+
+    } else {
+        path = x@path
+        auc = maxent_get_results(x,"auc")
+        predictors = maxent_get_varnames(x)
+        p_count = nrow(x@presence)
+        b_count = nrow(x@absence)
+        contrib = t(maxent_get_results(x,"contribution")[,1])
+        colnames(contrib) <- predictors
+        contrib <- dplyr::as_tibble(as.data.frame(contrib))
+        r = dplyr::tibble(path, auc, p_count, b_count) %>%
+            dplyr::bind_cols(contrib)
+    }
     if (save_summary) ok = maxent_write_summary(r, ...)
     r
 }
