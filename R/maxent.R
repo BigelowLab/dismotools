@@ -1,3 +1,131 @@
+#' Read a summary file for a model family run - generally consists of a CSV file
+#' with one row per model generated
+#'
+#' @export
+#' @param filename the filename with path
+#' @return either NULL or a tibble
+read_model_summary <- function(filename = "model_summary.csv"){
+  if (!file.exists(filename)){
+    warning("summary file not found:", filename)
+    r <- NULL
+  } else {
+    r <- suppressMessages(readr::read_csv(filename))
+  }
+  r
+}
+
+
+#' Plot a three panel summary: contributions, AUC and counts
+#'
+#' @export
+#' @param x a tibble of summary data
+#' @param version character, the model verison identifier
+#' @param fauc tibble or NULL, if not NULL then
+#'        include the FAUC in the middle panel
+#' @param count_legend text, location for legend in right hand counts plot
+#' @param auc_legend text, location for legend in middle AUC/FAUC plot
+#' @return nothing
+plot_model_summary <- function(x = read_model_summary(),
+                               version = "v0.000",
+                               fauc = NULL,
+                               auc_legend = "topright",
+                               count_legend = "topleft"){
+  par(mfrow = c(1,3))
+  auc <- x$auc
+  id <- basename(x$path)
+  m <- as.matrix(x %>% dplyr::select(-.data$path, -.data$auc, -.data$p_count, -.data$b_count))
+  rownames(m) <- id
+  xx <- seq_len(ncol(m))
+  yy <- seq_along(id)
+  image(xx, yy, t(m),
+        breaks = seq(from = 0, to = 90, length = 10),
+        zlim = c(0,100),
+        main = sprintf("model contributions, %s", version[1]),
+        xlab = '',
+        ylab = 'model',
+        xaxt = "n", yaxt = "n",
+        col = RColorBrewer::brewer.pal(9, "Oranges"))
+  axis(1, at = seq_len(ncol(m)), colnames(m), las = 2)
+
+  ids <- seq_along(id)
+  axis(2, at = pretty(ids), pretty(id), las = 2)
+
+  if (!is.null(fauc)){
+    plot(auc, ids, typ = 'l',
+         xlim = c(0.0, 1),
+         ylim = range(yy),
+         yaxt = "n",
+         yaxs = 'i',
+         xlab = 'auc', ylab = 'doy',
+         main = 'AUC')
+    fauc <- fauc %>%
+      dplyr::mutate(ids = ids)
+    points(fauc$fauc, fauc$ids,
+           col = "blue", pch = 19)
+    legend(auc_legend[1],
+           bg = "transparent",
+           bty = "n",
+           legend = c("model", "prediction"),
+           lwd = c(1,NA),
+           pch = c(NA, 19),
+           col = c("black", "blue") )
+
+
+  } else {
+
+    plot(auc, ids, typ = 'l',
+         xlim = c(0.5, 1),
+         ylim = range(yy),
+         yaxt = "n",
+         yaxs = 'i',
+         xlab = 'auc', ylab = 'model',
+         main = 'Model AUC')
+  }
+  axis(2, at = pretty(ids), pretty(id), las = 2)
+
+  pn <- x$p_count
+  bn <- x$b_count
+  xlim <- c(0, max(pmax(pn,bn)))
+  plot(pn, ids, typ = "l", lwd = 2, col = "blue",
+       xlim = xlim,
+       ylim = range(yy),
+       yaxt = "n",
+       yaxs = 'i',
+       xlab = 'count', ylab = 'doy',
+       main = 'Counts')
+  lines(bn, ids, lwd = 1)
+  axis(2, at = pretty(ids), pretty(id), las = 2)
+  legend(count_legend[1],
+         bg = "transparent",
+         bty = "n",
+         legend = c("presence", "background"),
+         lwd = c(2,1),
+         col = c("blue", "black")
+  )
+  invisible(NULL)
+}
+
+
+
+#' Checks if a dismo model ran successfully
+#'
+#' @export
+#' @param model a model object such as MaxEnt, CliMap
+#' @return logical. If model ran successfully?
+model_successful <- function(model){
+
+  classname <- class(model)
+  ok <- FALSE
+  if ("MaxEnt" %in% classname){
+    ok <- is.numeric(slot(model, "results"))
+  } else {
+    stop("class not known yet:", classname)
+  }
+
+  return(ok)
+}
+
+
 #' Write a maxent summary file
 #'
 #' @export
@@ -16,7 +144,8 @@ maxent_write_summary <- function(x, filename = NULL){
         cat("[summary]\n", file = conn)
         cat(sprintf("path: %s",x$path), "\n", file = conn)
         cat(sprintf("auc: %0.4f",x$auc), "\n", file = conn)
-        cat(sprintf("predictors: %s", paste(x$predictors, collapse = " ")), "\n", file = conn)
+        cat(sprintf("predictors: %s", paste(x$predictors, collapse = " ")), "\n",
+            file = conn)
         cat(sprintf("presence count: %i", x$p_count), "\n", file = conn)
         cat(sprintf("background count: %i", x$b_count), "\n", file = conn)
         cat("contributions:\n", file = conn)
@@ -58,22 +187,24 @@ maxent_summary <- function(x,
       return(r)
     }
 
+    path = slot(x, "path")
+    auc = maxent_get_results(x,"auc")
+    predictors = maxent_get_varnames(x)
+    #p_count = nrow(x@presence)
+    #b_count = nrow(x@absence)
+    p_count = (slot(x, "results"))['X.Training.samples', 1]
+    b_count = (slot(x, "results"))['X.Background.points', 1]
+    contrib = t(maxent_get_results(x,"contribution")[,1])
+
     if (tolower(fmt[1]) == 'list'){
         r = list(
-            path = x@path,
-            auc = maxent_get_results(x,"auc"),
-            predictors = maxent_get_varnames(x),
-            p_count = nrow(x@presence),
-            b_count = nrow(x@absence),
-            contrib = maxent_get_results(x,"contribution"))
-
+            path = path,
+            auc = auc,
+            predictors = predictors,
+            p_count = p_count,
+            b_count = b_count,
+            contrib = contrib)
     } else {
-        path = x@path
-        auc = maxent_get_results(x,"auc")
-        predictors = maxent_get_varnames(x)
-        p_count = nrow(x@presence)
-        b_count = nrow(x@absence)
-        contrib = t(maxent_get_results(x,"contribution")[,1])
         colnames(contrib) <- predictors
         contrib <- dplyr::as_tibble(as.data.frame(contrib))
         r = dplyr::tibble(path, auc, p_count, b_count) %>%
@@ -93,7 +224,7 @@ maxent_summary <- function(x,
 maxent_assemble_results <- function(x,
     include = c("auc", "contribution")){
 
-    nm <- sapply(x, function(x) basename(x@path))
+    nm <- sapply(x, function(x) basename(slot(x, "path")))
     auc <- sapply(x, maxent_get_results, 'auc')
     null <- sapply(auc, is.null)
     contrib <- lapply(x, maxent_get_results, "contribution")
@@ -194,8 +325,8 @@ maxent_read_results <- function(filename){
 #' @return characater vector of variable names or NULL
 maxent_get_varnames <- function(object){
    stopifnot(inherits(object, 'MaxEnt'))
-   if (is.null(object@presence) || (nrow(object@presence)==0)) return(NULL)
-   colnames(object@presence)
+   if (is.null(slot(object, "presence")) || (nrow(slot(object, "presence"))==0)) return(NULL)
+   colnames(slot(object, "presence"))
 }
 
 #' Retrieve the results of a MaxEnt model by name
@@ -211,22 +342,20 @@ maxent_get_varnames <- function(object){
 #' }
 maxent_get_results <- function(object, name){
    stopifnot(inherits(object, 'MaxEnt'))
-   if (is.null(object@results) || is.null(rownames(object@results)) ) return(NULL)
+   if (is.null(slot(object, "results")) || is.null(rownames(slot(object, "results"))) ) return(NULL)
    nm <- tolower(name[1])
    if (nm == 'contribution'){
       vn <- maxent_get_varnames(object)
-      x <- object@results[paste0(vn,".contribution"), ,drop = FALSE]
-      #names(x) <- gsub(".contribution", "", names(x), fixed = TRUE)
+      x <- (slot(object, "results"))[paste0(vn,".contribution"), ,drop = FALSE]
       names(x) <- vn
    } else if (nm == 'importance'){
       vn <- maxent_get_varnames(object)
-      x <- object@results[paste0(vn,".permutation.importance"),]
-      #names(x) <- gsub(".permutation.importance", "", names(x), fixed = TRUE)
+      x <- (slot(object, "results"))[paste0(vn,".permutation.importance"),]
       names(x) <- vn
    } else if(grepl("auc", tolower(name[1]), fixed = TRUE)){
-      x <- object@results['Training.AUC',]
+      x <- (slot(object, "results"))['Training.AUC',]
    } else{
-      x <- object@results[name,]
+      x <- (slot(object, "results"))[name,]
       names(x) <- name
    }
    x

@@ -177,3 +177,55 @@ tomorrow <- function(x = today(), n = 1, ...){
 yesterday <- function(x = today(), n = -1, ...){
     today(x + (n * 86400), ...)
 }
+
+#' Compute the doy window given the day of year and window size
+#'
+#' Given doy 100 with a window of c(-5,5) will yield -95,-96,...104,105
+#'
+#' @export
+#' @param x the day of year (should be 1-366 or 001-366)
+#' @param w the window as 2 elements [days before, days after]
+#' @param MAX the highest possible day number
+#' @return numeric doy vector
+doy_window <- function(x = 1, w = c(-5,5), MAX = 366){
+    newday <- as.numeric(x) + seq(from = w[1], to = w[2])
+    ix <- newday < 1
+    if (any(ix)) newday[ix] = MAX + newday[ix]
+    ix <- newday > MAX
+    if (any(ix)) newday[ix] = newday[ix] - MAX
+    newday
+}
+
+
+#' Compute the union of a list of vectors
+#'
+#' @export
+#' @param x a list of zero or more vectors
+#' @return a vector of the union or NULL is the input is empty
+munion <- function(x){
+    if (!is.list(x)) stop("input must be a list")
+    n <- length(x)
+    if (n == 0) return(NULL)
+    if (n == 1) return(x[[1]])
+
+    s <- x[[1]]
+    for (i in 2:n) s <- union(s, x[[i]])
+    s
+}
+
+#' Compute the intersection of a list of vectors
+#'
+#' @export
+#' @param x a list of zero or more vectors
+#' @return a vector of the intersection or NULL is the input is empty
+mintersect <- function(x){
+    if (!is.list(x)) stop("input must be a list")
+    n <- length(x)
+    if (n == 0) return(NULL)
+    if (n == 1) return(x[[1]])
+
+    s <- x[[1]]
+    for (i in 2:n) s <- intersect(s, x[[i]])
+    s
+}
+

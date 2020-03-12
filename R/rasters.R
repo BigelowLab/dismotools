@@ -2,6 +2,7 @@
 #'
 #' This function is essentially a wrapper around the \code{raster::cellFrom*()} functions.
 #'
+#' @name cellFromPts-deprecated
 #' @export
 #' @param R a multilayer Raster* object
 #' @param pts location info for points must have at least one of the following
@@ -14,7 +15,7 @@
 #'  }
 #' @return vector or cell numbers
 cellFromPts <- function(R, pts){
-
+  .Deprecated("please use the rasf packge https://github.com/BigelowLab/rasf")
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
     if (!is.data.frame(pts) && !is.matrix(pts))
         stop("Input pts must be data.frame or matrix")
@@ -48,6 +49,8 @@ cellFromPts <- function(R, pts){
 
 #' Extract values from a multilayer Raster*
 #'
+#'
+#' @name layers_extractPoints-deprecated
 #' @export
 #' @param R a single or multilayer Raster* object
 #' @param pts location info for points to be extracted. Must be a data frame
@@ -61,7 +64,7 @@ cellFromPts <- function(R, pts){
 #'  }
 #' @return a vector of values
 layers_extractPoints <- function(R, pts){
-
+  .Deprecated("please use the rasf packge https://github.com/BigelowLab/rasf")
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
 
     nl <- as.integer(raster::nlayers(R))
@@ -89,6 +92,7 @@ layers_extractPoints <- function(R, pts){
 
 #' Select N non-NA random points from a mulitlayer Raster* object
 #'
+#' @name layers_randomPoints-deprecated
 #' @export
 #' @param R a multilayer Raster* object
 #' @param pts xyz values for presence points [lon, lat, layer] - these
@@ -113,7 +117,7 @@ layers_extractPoints <- function(R, pts){
 #'      \item{value}
 #'  }
 layers_randomPoints <- function(R, pts = NULL, N = 1000){
-
+  .Deprecated("please use the rasf packge https://github.com/BigelowLab/rasf")
     if (!inherits(R, 'BasicRaster')) stop("Input R must be a Raster* class")
     if (!is.null(pts)){
         if (!(is.data.frame(pts) || is.matrix(pts)))

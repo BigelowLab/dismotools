@@ -13,6 +13,7 @@ Depends:
 Imports:
     utils,
     methods,
+    rlang,
     Rfast,
     dismo,
     raster,
@@ -22,5 +23,6 @@ Imports:
     tibble,
     grDevices,
     rasterVis,
-    readr
+    readr,
+    RColorBrewer
 RoxygenNote: 6.1.1
