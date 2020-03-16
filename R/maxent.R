@@ -192,8 +192,10 @@ maxent_summary <- function(x,
     predictors = maxent_get_varnames(x)
     #p_count = nrow(x@presence)
     #b_count = nrow(x@absence)
-    p_count = (slot(x, "results"))['X.Training.samples', 1]
-    b_count = (slot(x, "results"))['X.Background.points', 1]
+    #p_count = (slot(x, "results"))['X.Training.samples', 1]
+    #b_count = (slot(x, "results"))['X.Background.points', 1]
+    p_count <- nrow(slot(x, "presence"))
+    b_count <- nrow(slot(x, "absence"))
     contrib = t(maxent_get_results(x,"contribution")[,1])
 
     if (tolower(fmt[1]) == 'list'){
