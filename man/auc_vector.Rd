@@ -4,8 +4,7 @@
 \alias{auc_vector}
 \title{Compute AUC values ala presence-only data}
 \usage{
-auc_vector(f, v, thr = seq(from = 1, to = 0, by = -0.001),
-  method = "fast")
+auc_vector(f, v, thr = seq(from = 1, to = 0, by = -0.001), method = "fast")
 }
 \arguments{
 \item{f}{a vector of forecasted ranked suitability values, NaNs and NAs will be removed}

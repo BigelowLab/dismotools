@@ -4,8 +4,11 @@
 \alias{date_to_seasonname}
 \title{Compute a season from POSIXct or Date values}
 \usage{
-date_to_seasonname(x, lut = c("DJF", "DJF", "MAM", "MAM", "MAM", "JJA",
-  "JJA", "JJA", "SON", "SON", "SON", "DJF"))
+date_to_seasonname(
+  x,
+  lut = c("DJF", "DJF", "MAM", "MAM", "MAM", "JJA", "JJA", "JJA", "SON", "SON", "SON",
+    "DJF")
+)
 }
 \arguments{
 \item{x}{POSIXct or Date vector}

@@ -4,10 +4,17 @@
 \alias{animate_gif}
 \title{Create a gif animation using rasterVis::levelplot() and ImageMagick's convert}
 \usage{
-animate_gif(R, ..., mains = names(R), other_layers = NULL,
-  width = 480, height = 480, output_filename = file.path(".",
-  "animation.gif"), tmppath = tempfile(pattern = "animation"),
-  convert_extra = "-loop 0 -delay 50")
+animate_gif(
+  R,
+  ...,
+  mains = names(R),
+  other_layers = NULL,
+  width = 480,
+  height = 480,
+  output_filename = file.path(".", "animation.gif"),
+  tmppath = tempfile(pattern = "animation"),
+  convert_extra = "-loop 0 -delay 50"
+)
 }
 \arguments{
 \item{R}{a multi-layer raster object}

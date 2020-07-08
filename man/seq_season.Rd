@@ -4,8 +4,7 @@
 \alias{seq_season}
 \title{Generate a sequence of POSIXct by season start dates}
 \usage{
-seq_season(from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"),
-  to = today())
+seq_season(from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"), to = today())
 }
 \arguments{
 \item{from}{POSIXct, the starting date}

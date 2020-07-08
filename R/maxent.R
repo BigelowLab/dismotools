@@ -22,15 +22,29 @@ read_model_summary <- function(filename = "model_summary.csv"){
 #' @param version character, the model verison identifier
 #' @param fauc tibble or NULL, if not NULL then
 #'        include the FAUC in the middle panel
+#' @param model_name text, by default 'model' but can be anything you prefer
 #' @param count_legend text, location for legend in right hand counts plot
 #' @param auc_legend text, location for legend in middle AUC/FAUC plot
 #' @return nothing
 plot_model_summary <- function(x = read_model_summary(),
                                version = "v0.000",
                                fauc = NULL,
+                               model_name = "model",
                                auc_legend = "topright",
                                count_legend = "topleft"){
   par(mfrow = c(1,3))
+  has_shannon <- ("shannon" %in%  colnames(x))
+
+  col <- c(auc = "#000000",
+           fauc = "#0000FF",
+           shannon = "#CD6600")
+  lwd <- c(auc = 2,
+           fauc = NA,
+           shannon = 1)
+  pch <- c(auc = NA,
+           fauc = 19,
+           shannon = NA)
+
   auc <- x$auc
   id <- basename(x$path)
   m <- as.matrix(x %>% dplyr::select(-.data$path, -.data$auc, -.data$p_count, -.data$b_count))
@@ -42,7 +56,7 @@ plot_model_summary <- function(x = read_model_summary(),
         zlim = c(0,100),
         main = sprintf("model contributions, %s", version[1]),
         xlab = '',
-        ylab = 'model',
+        ylab = model_name[1],
         xaxt = "n", yaxt = "n",
         col = RColorBrewer::brewer.pal(9, "Oranges"))
   axis(1, at = seq_len(ncol(m)), colnames(m), las = 2)
@@ -50,37 +64,74 @@ plot_model_summary <- function(x = read_model_summary(),
   ids <- seq_along(id)
   axis(2, at = pretty(ids), pretty(id), las = 2)
 
+  if (has_shannon) {
+    xrange <- c(0, max(x$shannon))
+  } else {
+    xrange <- c(0.5,1)
+  }
   if (!is.null(fauc)){
     plot(auc, ids, typ = 'l',
-         xlim = c(0.0, 1),
+         lwd = lwd['auc'],
+         col = col['auc'],
+         xlim = xrange,
          ylim = range(yy),
          yaxt = "n",
          yaxs = 'i',
-         xlab = 'auc', ylab = 'doy',
-         main = 'AUC')
+         xlab = ifelse(has_shannon, 'AUC and Shannon index', "AUC"),
+         ylab = model_name[1],
+         main = ifelse(has_shannon, 'Model AUC and Shannon index', "Model AUC"))
+    if (has_shannon) lines(x$shannon, ids, typ = 'l',
+                           lwd = lwd['shannon'],
+                           col = col['shannon'])
     fauc <- fauc %>%
       dplyr::mutate(ids = ids)
     points(fauc$fauc, fauc$ids,
-           col = "blue", pch = 19)
-    legend(auc_legend[1],
+           col = col['fauc'],
+           pch = pch['fauc'])
+    if (has_shannon){
+      legend(auc_legend[1],
            bg = "transparent",
            bty = "n",
-           legend = c("model", "prediction"),
-           lwd = c(1,NA),
-           pch = c(NA, 19),
-           col = c("black", "blue") )
+           legend = c("model", "prediction", "Shannon"),
+           lwd = lwd,
+           pch = pch,
+           col = col)
+    } else {
+      legend(auc_legend[1],
+             bg = "transparent",
+             bty = "n",
+             legend = c("model", "prediction"),
+             lwd = lwd[c("auc", 'fauc')],
+             pch = pch[c("auc", "fuac")],
+             col = col[c("auc", "fuac")] )
+    }
 
 
   } else {
 
-    plot(auc, ids, typ = 'l',
-         xlim = c(0.5, 1),
+    plot(auc, ids, typ = 'l', lwd = 2,
+         xlim = xrange,
          ylim = range(yy),
          yaxt = "n",
          yaxs = 'i',
-         xlab = 'auc', ylab = 'model',
-         main = 'Model AUC')
-  }
+         xlab = ifelse(has_shannon, 'AUC and Shannon index', "AUC"),
+         ylab = model_name[1],
+         main = ifelse(has_shannon, 'Model AUC and Shannon index', "Model AUC"))
+    if (has_shannon) lines(x$shannon, ids, typ = 'l',
+                           lwd = lwd['shannon'],
+                           col = col['shannon'])
+    if (has_shannon){
+      legend(auc_legend[1],
+           bg = "transparent",
+           bty = "n",
+           legend = c("model",  "Shannon"),
+           lwd = lwd[c("auc", "shannon")],
+           pch = pch[c("auc", "shannon")],
+           col = col[c("auc", "shannon")] )
+    } else {
+
+    }
+    }
   axis(2, at = pretty(ids), pretty(id), las = 2)
 
   pn <- x$p_count
@@ -91,7 +142,7 @@ plot_model_summary <- function(x = read_model_summary(),
        ylim = range(yy),
        yaxt = "n",
        yaxs = 'i',
-       xlab = 'count', ylab = 'doy',
+       xlab = 'count', ylab = model_name[1],
        main = 'Counts')
   lines(bn, ids, lwd = 1)
   axis(2, at = pretty(ids), pretty(id), las = 2)
@@ -100,7 +151,7 @@ plot_model_summary <- function(x = read_model_summary(),
          bty = "n",
          legend = c("presence", "background"),
          lwd = c(2,1),
-         col = c("blue", "black")
+         col = c("#000000", "#0000FF")
   )
   invisible(NULL)
 }
@@ -197,7 +248,7 @@ maxent_summary <- function(x,
     p_count <- nrow(slot(x, "presence"))
     b_count <- nrow(slot(x, "absence"))
     contrib = t(maxent_get_results(x,"contribution")[,1])
-
+    shannon <- shannon_index(contrib)
     if (tolower(fmt[1]) == 'list'){
         r = list(
             path = path,
@@ -205,11 +256,12 @@ maxent_summary <- function(x,
             predictors = predictors,
             p_count = p_count,
             b_count = b_count,
+            shannon = shannon,
             contrib = contrib)
     } else {
         colnames(contrib) <- predictors
         contrib <- dplyr::as_tibble(as.data.frame(contrib))
-        r = dplyr::tibble(path, auc, p_count, b_count) %>%
+        r = dplyr::tibble(path, auc, p_count, b_count, shannon) %>%
             dplyr::bind_cols(contrib)
     }
     if (save_summary) ok = maxent_write_summary(r, ...)
@@ -361,4 +413,22 @@ maxent_get_results <- function(object, name){
       names(x) <- name
    }
    x
+}
+
+#' Compute the Shannon index given a table of contributions
+#'
+#' @seealso Wikipedia \href{https://en.wikipedia.org/wiki/Diversity_index#Shannon_index}{entry}
+#' @export
+#' @param x table or matrix of observations.  If a matrix then, like a table,
+#'        columns are variables and rows are records.
+#' @param base numeric, the base of the logarithm
+#' @return vector of Shannon index - one element for each record
+shannon_index <- function(x, base = exp(1)){
+
+  if (!inherits(x, "matrix")) x <- as.matrix(x)
+  apply(x, 1,
+       function(y) {
+          y <- y[y>0]/sum(y)
+          0 - sum( y * log(y + offset, base = base) )
+       })
 }

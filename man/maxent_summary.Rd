@@ -4,8 +4,12 @@
 \alias{maxent_summary}
 \title{Summarize a maxent model}
 \usage{
-maxent_summary(x, fmt = c("list", "dataframe", "tibble")[3],
-  save_summary = FALSE, ...)
+maxent_summary(
+  x,
+  fmt = c("list", "dataframe", "tibble")[3],
+  save_summary = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a MaxEnt model or a list of them.}

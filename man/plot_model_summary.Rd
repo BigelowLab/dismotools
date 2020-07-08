@@ -4,8 +4,14 @@
 \alias{plot_model_summary}
 \title{Plot a three panel summary: contributions, AUC and counts}
 \usage{
-plot_model_summary(x = read_model_summary(), version = "v0.000",
-  fauc = NULL, auc_legend = "topright", count_legend = "topleft")
+plot_model_summary(
+  x = read_model_summary(),
+  version = "v0.000",
+  fauc = NULL,
+  model_name = "model",
+  auc_legend = "topright",
+  count_legend = "topleft"
+)
 }
 \arguments{
 \item{x}{a tibble of summary data}
@@ -14,6 +20,8 @@ plot_model_summary(x = read_model_summary(), version = "v0.000",
 
 \item{fauc}{tibble or NULL, if not NULL then
 include the FAUC in the middle panel}
+
+\item{model_name}{text, by default 'model' but can be anything you prefer}
 
 \item{auc_legend}{text, location for legend in middle AUC/FAUC plot}
 

@@ -4,8 +4,12 @@
 \alias{as_POSIXct}
 \title{Convert a Date, character, or POSIXlt to POSIXct}
 \usage{
-as_POSIXct(x, time = "00:00:00", tz = "UTC",
-  format = "\%Y-\%m-\%d \%H:\%M:\%S")
+as_POSIXct(
+  x,
+  time = "00:00:00",
+  tz = "UTC",
+  format = "\%Y-\%m-\%d \%H:\%M:\%S"
+)
 }
 \arguments{
 \item{x}{vector of Date objects}

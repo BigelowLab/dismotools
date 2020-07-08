@@ -4,8 +4,11 @@
 \alias{images_to_gif}
 \title{Create a gif animatation using ImageMagick's convert}
 \usage{
-images_to_gif(FF, output_filename = "animation.gif",
-  convert_extra = "-loop 0 -delay 50")
+images_to_gif(
+  FF,
+  output_filename = "animation.gif",
+  convert_extra = "-loop 0 -delay 50"
+)
 }
 \arguments{
 \item{FF}{charcater vector of PNG filenames}
