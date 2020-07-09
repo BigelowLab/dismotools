@@ -2,22 +2,37 @@
 % Please edit documentation in R/maxent.R
 \name{shannon_index}
 \alias{shannon_index}
-\title{Compute the Shannon index given a table of contributions}
+\title{Compute a Shannon index for diversity of equitability}
 \usage{
-shannon_index(x, base = exp(1))
+shannon_index(
+  x,
+  type = c("proportion", "counts")[1],
+  equitability = TRUE,
+  base = exp(1),
+  invert = c(NA, "reciprocal", "one-minus")[1],
+  ...
+)
 }
 \arguments{
 \item{x}{table or matrix of observations.  If a matrix then, like a table,
 columns are variables and rows are records.}
 
+\item{type}{character, one of "proportion", "counts", etc.}
+
+\item{equitability}{logical, if TRUE (default) convert diversity to equitability which is
+just the normalized (0-1) diversity index}
+
 \item{base}{numeric, the base of the logarithm}
+
+\item{invert}{character, if \code{equitabilty} is \code{TRUE} then
+then invert using one-minus-equitability or 1/equitability. Ignored
+if \code{NA}}
+
+\item{...}{arguments for the diversity index function}
 }
 \value{
-vector of Shannon index - one element for each record
+vector of diversity index values - one element for each record (row of input)
 }
 \description{
-Compute the Shannon index given a table of contributions
-}
-\seealso{
-Wikipedia \href{https://en.wikipedia.org/wiki/Diversity_index#Shannon_index}{entry}
+Compute a Shannon index for diversity of equitability
 }

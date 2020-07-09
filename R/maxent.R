@@ -65,7 +65,7 @@ plot_model_summary <- function(x = read_model_summary(),
   axis(2, at = pretty(ids), pretty(id), las = 2)
 
   if (has_shannon) {
-    xrange <- c(0, max(x$shannon))
+    xrange <- c(0, 1.0)
   } else {
     xrange <- c(0.5,1)
   }
@@ -124,7 +124,7 @@ plot_model_summary <- function(x = read_model_summary(),
       legend(auc_legend[1],
            bg = "transparent",
            bty = "n",
-           legend = c("model",  "Shannon"),
+           legend = c("auc",  "Shannon"),
            lwd = lwd[c("auc", "shannon")],
            pch = pch[c("auc", "shannon")],
            col = col[c("auc", "shannon")] )
@@ -241,10 +241,6 @@ maxent_summary <- function(x,
     path = slot(x, "path")
     auc = maxent_get_results(x,"auc")
     predictors = maxent_get_varnames(x)
-    #p_count = nrow(x@presence)
-    #b_count = nrow(x@absence)
-    #p_count = (slot(x, "results"))['X.Training.samples', 1]
-    #b_count = (slot(x, "results"))['X.Background.points', 1]
     p_count <- nrow(slot(x, "presence"))
     b_count <- nrow(slot(x, "absence"))
     contrib = t(maxent_get_results(x,"contribution")[,1])
@@ -415,20 +411,85 @@ maxent_get_results <- function(object, name){
    x
 }
 
-#' Compute the Shannon index given a table of contributions
+
+#' Compute a Shannon index for diversity of equitability
+#'
+#' @export
+#' @param x table or matrix of observations.  If a matrix then, like a table,
+#'        columns are variables and rows are records.
+#' @param type character, one of "proportion", "counts", etc.
+#' @param equitability logical, if TRUE (default) convert diversity to equitability which is
+#'        just the normalized (0-1) diversity index
+#' @param base numeric, the base of the logarithm
+#' @param invert character, if \code{equitabilty} is \code{TRUE} then
+#'        then invert using one-minus-equitability or 1/equitability. Ignored
+#'        if \code{NA}
+#' @param ... arguments for the diversity index function
+#' @return vector of diversity index values - one element for each record (row of input)
+shannon_index <- function(x,
+                            type = c("proportion", "counts")[1],
+                            equitability = TRUE,
+                            base = exp(1),
+                            invert = c(NA, "reciprocal", "one-minus")[1],
+                            ...){
+
+  if (!inherits(x, "matrix")) x <- as.matrix(x)
+  s <- switch(tolower(type[1]),
+         'counts' = shannon_counts_index(x, base = base, ...),
+         'proportion' = shannon_proportion_index(x, base = base, ...))
+  if (equitability){
+    s <- s/log(ncol(x))
+    s <- switch(tolower(as.character(invert[1])),
+                "reciprocal" = 1/s,
+                "one-minus" = 1 - s,
+                s)
+  }
+  s
+}
+
+
+#' Compute Shannon Index froma a table of counts
+#'
+#' @seealso NIST \href{https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/shannon.htm}{entry}
+#' @param x table or matrix of observations.  If a matrix then, like a table,
+#'        columns are variables and rows are records.
+#' @param base numeric, the base of the logarithm
+#' @return vector of Shannon index - one element for each record
+shannon_counts_index <- function(x, base = exp(1)){
+  if (!inherits(x, "matrix")) x <- as.matrix(x)
+  apply(x, 1,
+    function(y){
+      ix <- y <= 0
+      n <- sum(y)
+      ln <- y * log(y, base = base)
+      ln[ix] <- 0
+      (n*log(n, base - base) - sum(ln))/n
+    })
+}
+
+#' Compute the Shannon index from a table of contributions
 #'
 #' @seealso Wikipedia \href{https://en.wikipedia.org/wiki/Diversity_index#Shannon_index}{entry}
 #' @export
 #' @param x table or matrix of observations.  If a matrix then, like a table,
 #'        columns are variables and rows are records.
 #' @param base numeric, the base of the logarithm
+#' @param offset numeric, a small value to prevent taking the log of zero. If \code{offset} is
+#'        NA or less than or equal to zero then zero-valued elements are removed.
+#'        if \code{offset} greater than zero, then zero-valued elements in x are
+#'        replaced with this value.
 #' @return vector of Shannon index - one element for each record
-shannon_index <- function(x, base = exp(1)){
+shannon_proportion_index <- function(x, base = exp(1), offset = c(1e-5, NA)[1]){
 
   if (!inherits(x, "matrix")) x <- as.matrix(x)
   apply(x, 1,
-       function(y) {
-          y <- y[y>0]/sum(y)
-          0 - sum( y * log(y + offset, base = base) )
-       })
+    function(y) {
+      if (is.na(offset[1]) || (offset[1] <= 0)){
+        y <- y[y>0]
+      } else {
+        y[y <= 0] <- offset[1]
+      }
+      y <- y/sum(y)
+      0 - sum( y * log(y + offset, base = base) )
+      })
 }
