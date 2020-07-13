@@ -50,7 +50,9 @@ plot_model_summary <- function(x = read_model_summary(),
   m <- as.matrix(x %>% dplyr::select(-.data$path, -.data$auc, -.data$p_count, -.data$b_count))
   rownames(m) <- id
   xx <- seq_len(ncol(m))
-  yy <- seq_along(id)
+  ids <- as.numeric(id)
+  rids <- range(ids)
+  yy <- seq(from = rids[1], to = rids[2])
   image(xx, yy, t(m),
         breaks = seq(from = 0, to = 90, length = 10),
         zlim = c(0,100),
@@ -61,8 +63,9 @@ plot_model_summary <- function(x = read_model_summary(),
         col = RColorBrewer::brewer.pal(9, "Oranges"))
   axis(1, at = seq_len(ncol(m)), colnames(m), las = 2)
 
-  ids <- seq_along(id)
-  axis(2, at = pretty(ids), pretty(id), las = 2)
+
+  pretty_id <- pretty(ids)
+  axis(2, at = pretty_id, TRUE, las = 2)
 
   if (has_shannon) {
     xrange <- c(0, 1.0)
@@ -129,10 +132,16 @@ plot_model_summary <- function(x = read_model_summary(),
            pch = pch[c("auc", "shannon")],
            col = col[c("auc", "shannon")] )
     } else {
-
+      #legend(auc_legend[1],
+      #       bg = "transparent",
+      #       bty = "n",
+      #       legend = "auc",
+      #       lwd = lwd["auc"],
+      #       pch = pch["auc"],
+      #       col = col["auc"] )
     }
-    }
-  axis(2, at = pretty(ids), pretty(id), las = 2)
+  }  # shannon
+  axis(2, at = pretty_id, TRUE, las = 2)
 
   pn <- x$p_count
   bn <- x$b_count
