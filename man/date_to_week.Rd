@@ -2,9 +2,18 @@
 % Please edit documentation in R/datetime.R
 \name{date_to_week}
 \alias{date_to_week}
+\alias{date_to_week.default}
+\alias{date_to_week.POSIXct}
+\alias{date_to_week.Date}
 \title{Convert to as POSIXct to an 8D week number (1-46) or 7D week number (1-52)}
 \usage{
-date_to_week(x = today(), week_length = c(8, 7)[1])
+date_to_week(x)
+
+\method{date_to_week}{default}(x, week_length = c(8, 7)[1])
+
+\method{date_to_week}{POSIXct}(x = Sys.time(), week_length = c(8, 7)[1])
+
+\method{date_to_week}{Date}(x = Sys.Date(), week_length = c(8, 7)[1])
 }
 \arguments{
 \item{x}{POSIXct or Date vector}
@@ -17,3 +26,12 @@ numeric 1-46 or 1-52 week number
 \description{
 Convert to as POSIXct to an 8D week number (1-46) or 7D week number (1-52)
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: for missing input
+
+\item \code{POSIXct}: for POSIXct input
+
+\item \code{Date}: for Date input
+}}
+

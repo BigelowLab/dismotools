@@ -2,10 +2,22 @@
 % Please edit documentation in R/datetime.R
 \name{today}
 \alias{today}
+\alias{today.default}
+\alias{today.POSIXct}
+\alias{today.Date}
 \title{Compute today's date as POSIXct}
 \usage{
-today(
+today(x)
+
+\method{today}{default}(x, form = c("POSIXct", "Date", "\%Y-\%m-\%d", "week", "season")[2])
+
+\method{today}{POSIXct}(
   x = as.POSIXct(paste(Sys.Date(), "00:00:00"), tz = "UTC"),
+  form = c("POSIXct", "Date", "\%Y-\%m-\%d", "week", "season")[1]
+)
+
+\method{today}{Date}(
+  x = Sys.Date(),
   form = c("POSIXct", "Date", "\%Y-\%m-\%d", "week", "season")[1]
 )
 }
@@ -20,3 +32,12 @@ POSIXct
 \description{
 Compute today's date as POSIXct
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: for missing input
+
+\item \code{POSIXct}: for POSIXct input
+
+\item \code{Date}: for Date input
+}}
+

@@ -2,18 +2,34 @@
 % Please edit documentation in R/datetime.R
 \name{seq_season}
 \alias{seq_season}
-\title{Generate a sequence of POSIXct by season start dates}
+\alias{seq_season.POSIXct}
+\alias{seq_season.Date}
+\title{Generate a sequence of POSIXct or Date by season start dates}
 \usage{
-seq_season(from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"), to = today())
+seq_season(from, to)
+
+\method{seq_season}{POSIXct}(
+  from = as.POSIXct("2003-12-01 00:00:00", tz = "UTC"),
+  to = Sys.time()
+)
+
+\method{seq_season}{Date}(from = as.Date("2003-12-01"), to = Sys.Date())
 }
 \arguments{
-\item{from}{POSIXct, the starting date}
+\item{from}{POSIXct or Date, the starting date}
 
-\item{to}{POSIXct, the ending date}
+\item{to}{POSIXct or Date, the ending date}
 }
 \value{
-POSIXct sequence
+POSIXct or Date sequence
 }
 \description{
-Generate a sequence of POSIXct by season start dates
+Generate a sequence of POSIXct or Date by season start dates
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{POSIXct}: for POSIXct input
+
+\item \code{Date}: for Date input
+}}
+

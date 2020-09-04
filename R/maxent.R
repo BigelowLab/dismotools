@@ -32,28 +32,42 @@ plot_model_summary <- function(x = read_model_summary(),
                                model_name = "model",
                                auc_legend = "topright",
                                count_legend = "topleft"){
-  par(mfrow = c(1,3))
+  opar <- par(no.readonly = TRUE)
+  on.exit( par(opar) )
+
   has_shannon <- ("shannon" %in%  colnames(x))
 
   col <- c(auc = "#000000",
            fauc = "#0000FF",
-           shannon = "#CD6600")
+           shannon = "#CD6600",
+           bkg = "#0000FF",
+           pres = "#000000")
   lwd <- c(auc = 2,
            fauc = NA,
-           shannon = 1)
+           shannon = 1,
+           pres = 2,
+           bkg= 1)
   pch <- c(auc = NA,
            fauc = 19,
            shannon = NA)
+  legend_loc <- "bottomright"
+  inset = inset=c(0,1)
 
   auc <- x$auc
   id <- basename(x$path)
-  m <- as.matrix(x %>% dplyr::select(-.data$path, -.data$auc, -.data$p_count, -.data$b_count))
+  m <- as.matrix(x %>% dplyr::select(-.data$path, -.data$auc, -.data$p_count,
+                                     -.data$b_count, -.data$shannon))
   rownames(m) <- id
   xx <- seq_len(ncol(m))
-  ids <- as.numeric(id)
+  yy <- ids <- as.numeric(id)
   rids <- range(ids)
-  yy <- seq(from = rids[1], to = rids[2])
+
+
+  par(mfrow = c(1,3), mar = par("mar") + c(2,0,0,0))
+
+
   image(xx, yy, t(m),
+        ylim = rids,
         breaks = seq(from = 0, to = 90, length = 10),
         zlim = c(0,100),
         main = sprintf("model contributions, %s", version[1]),
@@ -92,21 +106,32 @@ plot_model_summary <- function(x = read_model_summary(),
            col = col['fauc'],
            pch = pch['fauc'])
     if (has_shannon){
-      legend(auc_legend[1],
-           bg = "transparent",
-           bty = "n",
-           legend = c("model", "prediction", "Shannon"),
-           lwd = lwd,
-           pch = pch,
-           col = col)
+      #legend("bottomright", c("group A", "group B"), pch=c(1,2), lty=c(1,2),
+      #inset=c(0,1), xpd=TRUE, horiz=TRUE, bty="n"
+      #)
+      legend(
+        legend_loc,
+        xpd = TRUE,
+        horiz = TRUE,
+        inset = inset,
+        bg = "transparent",
+        bty = "n",
+        legend = c("model", "prediction", "Shannon"),
+        lwd = lwd,
+        pch = pch,
+        col = col)
     } else {
-      legend(auc_legend[1],
-             bg = "transparent",
-             bty = "n",
-             legend = c("model", "prediction"),
-             lwd = lwd[c("auc", 'fauc')],
-             pch = pch[c("auc", "fuac")],
-             col = col[c("auc", "fuac")] )
+      legend(
+        legend_loc,
+        xpd = TRUE,
+        horiz = TRUE,
+        inset = inset,
+        bg = "transparent",
+        bty = "n",
+        legend = c("model", "prediction"),
+        lwd = lwd[c("auc", 'fauc')],
+        pch = pch[c("auc", "fuac")],
+        col = col[c("auc", "fuac")] )
     }
 
 
@@ -124,13 +149,17 @@ plot_model_summary <- function(x = read_model_summary(),
                            lwd = lwd['shannon'],
                            col = col['shannon'])
     if (has_shannon){
-      legend(auc_legend[1],
-           bg = "transparent",
-           bty = "n",
-           legend = c("auc",  "Shannon"),
-           lwd = lwd[c("auc", "shannon")],
-           pch = pch[c("auc", "shannon")],
-           col = col[c("auc", "shannon")] )
+      legend(
+        legend_loc,
+        xpd = TRUE,
+        horiz = TRUE,
+        inset = inset,
+        bg = "transparent",
+        bty = "n",
+        legend = c("AUC",  "Shannon"),
+        lwd = lwd[c("auc", "shannon")],
+        pch = pch[c("auc", "shannon")],
+        col = col[c("auc", "shannon")] )
     } else {
       #legend(auc_legend[1],
       #       bg = "transparent",
@@ -146,22 +175,30 @@ plot_model_summary <- function(x = read_model_summary(),
   pn <- x$p_count
   bn <- x$b_count
   xlim <- c(0, max(pmax(pn,bn)))
-  plot(pn, ids, typ = "l", lwd = 2, col = "blue",
+  plot(pn, ids, typ = "l",
+       lwd = lwd[['pres']],
+       col = col[['pres']],
        xlim = xlim,
        ylim = range(yy),
        yaxt = "n",
        yaxs = 'i',
-       xlab = 'count', ylab = model_name[1],
+       xlab = 'count',
+       ylab = model_name[1],
        main = 'Counts')
-  lines(bn, ids, lwd = 1)
+  lines(bn, ids,
+        lwd = lwd[['bkg']],
+        col = col[['bkg']])
   axis(2, at = pretty(ids), pretty(id), las = 2)
-  legend(count_legend[1],
-         bg = "transparent",
-         bty = "n",
-         legend = c("presence", "background"),
-         lwd = c(2,1),
-         col = c("#000000", "#0000FF")
-  )
+  legend(
+    legend_loc,
+    xpd = TRUE,
+    horiz = TRUE,
+    inset = inset,,
+    bg = "transparent",
+    bty = "n",
+    legend = c("presence", "background"),
+    lwd = lwd[c("pres", "bkg")],
+    col = col[c("pres", "bkg")])
   invisible(NULL)
 }
 

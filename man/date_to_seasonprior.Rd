@@ -2,9 +2,18 @@
 % Please edit documentation in R/datetime.R
 \name{date_to_seasonprior}
 \alias{date_to_seasonprior}
+\alias{date_to_seasonprior.default}
+\alias{date_to_seasonprior.POSIXct}
+\alias{date_to_seasonprior.Date}
 \title{Compute the prior season specified for each provided date.}
 \usage{
-date_to_seasonprior(x = today())
+date_to_seasonprior(x)
+
+\method{date_to_seasonprior}{default}(x)
+
+\method{date_to_seasonprior}{POSIXct}(x = Sys.time())
+
+\method{date_to_seasonprior}{Date}(x = Sys.Date())
 }
 \arguments{
 \item{x}{POSIXct or Date vector}
@@ -23,3 +32,12 @@ tibble with 5 columns of POSIXct vectors
 Consider a spring (MAM) input date, the prior MAM will be 1 year before,
  while the prior DJF will be just three months before.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: for missing input
+
+\item \code{POSIXct}: for POSIXct input
+
+\item \code{Date}: for Date input
+}}
+
