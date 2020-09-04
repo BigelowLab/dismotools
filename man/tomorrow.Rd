@@ -2,18 +2,9 @@
 % Please edit documentation in R/datetime.R
 \name{tomorrow}
 \alias{tomorrow}
-\alias{tomorrow.default}
-\alias{tomorrow.POSIXct}
-\alias{tomorrow.Date}
 \title{Compute the next n day}
 \usage{
-tomorrow(x)
-
-\method{tomorrow}{default}(x, n = 1)
-
-\method{tomorrow}{POSIXct}(x = Sys.time(), n = 1)
-
-\method{tomorrow}{Date}(x = Sys.Date(), n = 1)
+tomorrow(x, n = 1)
 }
 \arguments{
 \item{x}{Date or POSIXct, starting date, generally \code{today()}}
@@ -26,12 +17,3 @@ POSIXct or Date
 \description{
 Compute the next n day
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{default}: for missing input
-
-\item \code{POSIXct}: for POSIXct input
-
-\item \code{Date}: for Date input
-}}
-

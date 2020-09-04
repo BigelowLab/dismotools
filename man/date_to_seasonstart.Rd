@@ -2,18 +2,9 @@
 % Please edit documentation in R/datetime.R
 \name{date_to_seasonstart}
 \alias{date_to_seasonstart}
-\alias{date_to_seasonstart.default}
-\alias{date_to_seasonstart.POSIXct}
-\alias{date_to_seasonstart.Date}
 \title{Compute a season start from POSIXct or Date values}
 \usage{
 date_to_seasonstart(x)
-
-\method{date_to_seasonstart}{default}(x)
-
-\method{date_to_seasonstart}{POSIXct}(x)
-
-\method{date_to_seasonstart}{Date}(x)
 }
 \arguments{
 \item{x}{POSIXct or Date vector}
@@ -24,12 +15,3 @@ POSIXct or Date that starts the season a date belongs to
 \description{
 Compute a season start from POSIXct or Date values
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{default}: for missing input
-
-\item \code{POSIXct}: for POSIXct input
-
-\item \code{Date}: for Date input
-}}
-

@@ -2,26 +2,9 @@
 % Please edit documentation in R/datetime.R
 \name{date_to_seasonname}
 \alias{date_to_seasonname}
-\alias{date_to_seasonname.default}
-\alias{date_to_seasonname.POSIXct}
-\alias{date_to_seasonname.Date}
 \title{Compute a season from POSIXct or Date values}
 \usage{
-date_to_seasonname(x)
-
-\method{date_to_seasonname}{default}(
-  x,
-  lut = c("DJF", "DJF", "MAM", "MAM", "MAM", "JJA", "JJA", "JJA", "SON", "SON", "SON",
-    "DJF")
-)
-
-\method{date_to_seasonname}{POSIXct}(
-  x,
-  lut = c("DJF", "DJF", "MAM", "MAM", "MAM", "JJA", "JJA", "JJA", "SON", "SON", "SON",
-    "DJF")
-)
-
-\method{date_to_seasonname}{Date}(
+date_to_seasonname(
   x,
   lut = c("DJF", "DJF", "MAM", "MAM", "MAM", "JJA", "JJA", "JJA", "SON", "SON", "SON",
     "DJF")
@@ -39,12 +22,3 @@ charcater vector of season names, same length as x
 \description{
 Compute a season from POSIXct or Date values
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{default}: non POSIXct or Date classes
-
-\item \code{POSIXct}: for POSIXct classes
-
-\item \code{Date}: for Date classes
-}}
-

@@ -2,18 +2,9 @@
 % Please edit documentation in R/datetime.R
 \name{yesterday}
 \alias{yesterday}
-\alias{yesterday.default}
-\alias{yesterday.POSIXct}
-\alias{yesterday.Date}
 \title{Compute the prior n day.}
 \usage{
-yesterday(x)
-
-\method{yesterday}{default}(x, n = -1)
-
-\method{yesterday}{POSIXct}(x = Sys.time(), n = -1)
-
-\method{yesterday}{Date}(x = Sys.Date(), n = -1)
+yesterday(x, n = -1)
 }
 \arguments{
 \item{x}{POSIXct date as a starting date, generally \code{today()}}
@@ -26,12 +17,3 @@ POSIXct
 \description{
 A wrapper around \code{tomorrow()}
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{default}: for missing input
-
-\item \code{POSIXct}: for POSIXct input
-
-\item \code{Date}: for Date input
-}}
-
