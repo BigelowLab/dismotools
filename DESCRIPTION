@@ -25,4 +25,4 @@ Imports:
     rasterVis,
     readr,
     RColorBrewer
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
