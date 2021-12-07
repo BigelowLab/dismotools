@@ -12,6 +12,7 @@ Depends:
     R (>= 3.0)
 Imports:
     utils,
+    stats,
     methods,
     rlang,
     Rfast,

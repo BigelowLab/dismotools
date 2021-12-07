@@ -23,6 +23,9 @@ compute_response(x, var, at, data, cn, expand, fun, N)
 
 \item{N}{numeric, defines number of interpolates (rows)}
 }
+\value{
+tibble of predictors interpolated at N values and response pairs
+}
 \description{
 Compute maxent response
 }

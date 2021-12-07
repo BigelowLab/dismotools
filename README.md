@@ -17,12 +17,13 @@ install_github('BigelowLab/dismotools')
 
 ### Usage
 
-Maxent tools - reading from disk, getting model elements, assemblies of models
+Maxent tools - reading from disk, getting model elements, retrieving response data, assemblies of models
 
 ```r
 m = read_maxent("/path/to/maxent/directory")
 ok = model_successful(m)
 auc = maxent_get_results(m, 'AUC')
+resp = maxent_repsonse(m, plot = TRUE)
 contrib = maxent_get_results(m, 'contribution')
 mm = lapply(list_of_maxent_directories, maxent_assemble_results)
 ```

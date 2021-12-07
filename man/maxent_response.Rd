@@ -11,8 +11,10 @@ maxent_response(
   range = "pa",
   expand = 10,
   data = NULL,
-  fun = predict,
-  N = 100
+  fun = dismo::predict,
+  N = 100,
+  plot = FALSE,
+  ...
 )
 }
 \arguments{
@@ -31,6 +33,10 @@ maxent_response(
 \item{fun}{see \code{\link[dismo]{response}}}
 
 \item{N}{numeric, the number of rows in the output.  Responses are interpolated at this number of intervals.}
+
+\item{plot}{logical, if TRUE plot the response curves with \code{\link{plot_response}}}
+
+\item{...}{see \code{\link[dismo]{response}}}
 }
 \value{
 tibble of sampled predictors and responses

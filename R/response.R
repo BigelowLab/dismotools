@@ -9,6 +9,8 @@
 #' @param fun see \code{\link[dismo]{response}}
 #' @param expand see \code{\link[dismo]{response}}
 #' @param range see \code{\link[dismo]{response}}
+#' @param plot logical, if TRUE plot the response curves with \code{\link{plot_response}}
+#' @param ... see \code{\link[dismo]{response}}
 #' @return tibble of sampled predictors and responses 
 maxent_response <- function(x , 
                             var=NULL, 
@@ -16,17 +18,20 @@ maxent_response <- function(x ,
                             range='pa', 
                             expand=10, 
                             data=NULL, 
-                            fun=predict,
-                            N = 100) {
+                            fun=dismo::predict,
+                            N = 100,
+                            plot = FALSE,
+                            ...) {
   if (FALSE){
     x = dismotools::read_maxent("/mnt/ecocast/projectdata/students/kenny/habobis/versions/v2/v2.101/model")
     var=NULL
     data=NULL
-    fun=predict
+    fun=dismo::predict
     at=median
     range='pa'
     expand=10 
     N = 100
+    plot = FALSE
   }
   stopifnot(range %in% c('p', 'pa'))
   if (is.null(data)) {
@@ -50,8 +55,13 @@ maxent_response <- function(x ,
     stop('var not found')	
   }
   
-  compute_response(x, var, at, data, cn, expand, fun, N)
+  pd <- compute_response(x, var, at, data, cn, expand, fun, N)
   
+  if (plot){
+    plot_response(x, resp = pd, pd, data = data,  ... )
+  }
+  
+  return(pd)
 }
 
 
@@ -63,8 +73,10 @@ maxent_response <- function(x ,
 #' @param cn char, column names
 #' @param expand see \code{\link[dismo]{response}}
 #' @param fun see \code{\link[dismo]{response}}
-#' @param N numeric, defines number of interpolates (rows) 
+#' @param N numeric, defines number of interpolates (rows)
+#' @return tibble of predictors interpolated at N values and response pairs  
 compute_response <- function(x, var, at, data, cn, expand, fun, N) {
+  
   f <- sapply(data, is.factor)
   notf <- !f
   m <- matrix(nrow=1, ncol=ncol(data))
@@ -136,4 +148,63 @@ compute_response <- function(x, var, at, data, cn, expand, fun, N) {
         dplyr::as_tibble()
     }) |>
     dplyr::bind_cols()
+}
+
+#' Plot a response
+#' 
+#' @export
+#' @param x maxent model
+#' @param resp data frame of maxent response as per \code{\link{maxent_response}}
+#' @param data data.frame or matrix of from the model or NULL
+#' @param rug logical, if \code{TRUE} and \code{data} is present then add rug plot  
+#' @param ylim see \code{\link[dismo]{response}}
+#' @param col see \code{\link[dismo]{response}}
+#' @param lwd see \code{\link[dismo]{response}}
+#' @param add see \code{\link[dismo]{response}}
+#' @param ... additional arguments for plotting 
+plot_response <- function(x, 
+                          resp = maxent_response(plot = FALSE), 
+                          data = NULL, 
+                          rug=TRUE, 
+                          ylim=c(0,1), 
+                          col="#DF536B", 
+                          lwd=2, 
+                          add=FALSE, 
+                          ... ){
+  
+  varnames <- colnames(resp)
+  ix <- grepl(".response", varnames, fixed = TRUE)
+  vars <- varnames[!ix] 
+  
+  if (length(vars) > 1 & !add) {
+    old.par <- graphics::par(no.readonly = TRUE) 
+    on.exit(graphics::par(old.par))
+    xs <- floor(sqrt(length(vars)))
+    ys <- ceiling(length(vars) / xs)
+    graphics::par(mfrow=c(xs, ys))
+  }
+  
+  for (var in vars){
+    pd <- resp |>
+      dplyr::select(var, paste0(var, '.response'))
+    fact <- is.factor(pd[[var]])
+    if (add) {
+      if (fact) {
+        points(pd, col=col, lwd=lwd, ...)
+      } else {
+        points(pd, col=col, lwd=lwd, type='l', ...)			
+      }
+    } else {
+      if (fact) {
+        plot(pd, xlab=var, ylab='predicted value', col=col, lwd=lwd, ylim=ylim, ...)
+      } else {
+        plot(pd, xlab=var, ylab='predicted value', col=col, lwd=lwd, ylim=ylim, type='l', ...)
+      }
+      if (rug && !is.null(data)) {
+        if (!is.factor(data[,var])) {
+          rug(quantile(data[,var], probs = seq(0, 1, 0.1)), col = '#000000')
+        }
+      }
+    }
+  }
 }
