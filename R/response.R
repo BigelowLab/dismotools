@@ -12,6 +12,10 @@
 #' @param plot logical, if TRUE plot the response curves with \code{\link{plot_response}}
 #' @param ... see \code{\link[dismo]{response}}
 #' @return tibble of sampled predictors and responses 
+#' @examples 
+#' \dontrun{
+#'   resp <- maxent_response(model, plot = TRUE)
+#' }
 maxent_response <- function(x , 
                             var=NULL, 
                             at=median, 

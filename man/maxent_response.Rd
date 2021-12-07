@@ -44,3 +44,8 @@ tibble of sampled predictors and responses
 \description{
 Compute the predictor response(s) for a maxent model.
 }
+\examples{
+\dontrun{
+  resp <- maxent_response(model, plot = TRUE)
+}
+}
