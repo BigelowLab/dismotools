@@ -167,7 +167,7 @@ compute_response <- function(x, var, at, data, cn, expand, fun, N) {
 #' @param add see \code{\link[dismo]{response}}
 #' @param ... additional arguments for plotting 
 plot_response <- function(x, 
-                          resp = maxent_response(plot = FALSE), 
+                          resp = maxent_response(x,plot = FALSE), 
                           data = NULL, 
                           rug=TRUE, 
                           ylim=c(0,1), 

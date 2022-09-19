@@ -6,7 +6,7 @@
 \usage{
 plot_response(
   x,
-  resp = maxent_response(plot = FALSE),
+  resp = maxent_response(x, plot = FALSE),
   data = NULL,
   rug = TRUE,
   ylim = c(0, 1),
