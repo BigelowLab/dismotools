@@ -337,7 +337,7 @@ maxent_assemble_results <- function(x,
 #' Read a dismo::MaxEnt model saved in a directory.
 #'
 #' @export
-#' @param path fully qualified path to where the MexEnt model is saved
+#' @param path fully qualified path to where the MaxEnt model is saved
 #'  If multiple paths are provided then a list of models is returned.
 #'  You just have to keep track of this yourself so you aren't surprised.
 #' @return a MaxEnt model object, a list of Maxent models or NULL
